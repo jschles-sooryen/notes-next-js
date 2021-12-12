@@ -7,7 +7,13 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@emotion/cache": "^11.7.1",
+    "@emotion/react": "^11.7.1",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.2.3",
     "@reduxjs/toolkit": "^1.6.2",
+    "clsx": "^1.1.1",
     "dotenv": "^10.0.0",
     "next": "latest",
     "next-auth": "^4.0.2",
