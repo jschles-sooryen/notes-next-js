@@ -13,12 +13,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
             console.log(
                 '2. Page.getStaticProps uses the store to dispatch things'
             );
-            store.dispatch(setUser('Hello 2'));
-
-            console.log('preview', ctx);
 
             const session = await getSession({ req: ctx.req });
-            console.log('session', session);
 
             if (!session) {
                 return {
@@ -28,6 +24,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
                     },
                 };
             }
+
+            store.dispatch(setUser(session.user));
 
             return {
                 props: { session },
