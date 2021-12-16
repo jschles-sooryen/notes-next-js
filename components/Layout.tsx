@@ -12,6 +12,8 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
     <Box
         sx={{
             height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
         }}
     >
         <Head>
@@ -23,7 +25,17 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
             />
         </Head>
         <Header />
-        <Box sx={{ padding: 2 }}>{children}</Box>
+        <Box
+            sx={{
+                padding: 2,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+            }}
+        >
+            {children}
+        </Box>
     </Box>
 );
 
