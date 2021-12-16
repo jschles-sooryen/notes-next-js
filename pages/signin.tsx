@@ -2,10 +2,10 @@ import { Box } from '@mui/system';
 import { Button } from '@mui/material';
 import { NextPage } from 'next';
 import { getSession, signIn } from 'next-auth/react';
-import Link from 'next/link';
 import Layout from '../components/Layout';
 import Card from '../components/Card';
 import { wrapper } from '../store';
+import { setUser } from '../store/auth/reducer';
 
 export const getServerSideProps = wrapper.getServerSideProps(
     (store) =>
@@ -19,6 +19,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
                         permanent: false,
                     },
                 };
+            } else {
+                store.dispatch(setUser(null));
             }
 
             return {
@@ -28,8 +30,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const SignInPage: NextPage = (props) => {
-    // Test for next auth
-    const googleTest = async () => {
+    const handleSignIn = async () => {
         const profile = await signIn('google');
     };
 
@@ -52,9 +53,10 @@ const SignInPage: NextPage = (props) => {
                     Welcome! Please Sign In.
                 </Box>
                 <Button
+                    disableElevation
                     variant="contained"
                     color="secondary"
-                    onClick={googleTest}
+                    onClick={handleSignIn}
                     sx={{
                         display: 'block',
                         marginLeft: 'auto',
