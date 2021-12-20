@@ -1,10 +1,12 @@
 import { NextPage } from 'next';
 import { getSession } from 'next-auth/react';
+import { useSelector } from 'react-redux';
 import Layout from '../components/Layout';
+import WelcomeUser from '../components/WelcomeUser';
 import { wrapper } from '../store';
 import { setUser } from '../store/auth/reducer';
+import { selectUser } from '../store/auth/selectors';
 
-// Test dispatch
 export const getServerSideProps = wrapper.getServerSideProps(
     (store) =>
         async (ctx): Promise<any> => {
@@ -29,9 +31,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const IndexPage: NextPage = (props) => {
+    const user = useSelector(selectUser);
     return (
         <Layout title="Home | Next.js + TypeScript Example">
-            <h1>Hello Next.js 👋</h1>
+            {/* <h1>Hello Next.js 👋</h1> */}
+            <WelcomeUser user={user} />
         </Layout>
     );
 };
