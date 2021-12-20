@@ -30,19 +30,6 @@ const theme = createTheme({
     spacing: 8,
     typography: {
         fontSize: 16,
-        fontFamily: [
-            'Montserrat',
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
     },
 });
 

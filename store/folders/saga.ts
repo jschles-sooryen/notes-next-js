@@ -2,7 +2,7 @@ import { AnyAction } from '@reduxjs/toolkit';
 import * as Effects from 'redux-saga/effects';
 import { fetchFoldersSuccess, fetchFoldersFail } from './reducer';
 
-const { put }: any = Effects;
+const { call, put }: any = Effects;
 
 export function* fetchFoldersSaga() {
     // yield put(loading());
