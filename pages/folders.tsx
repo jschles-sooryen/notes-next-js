@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSession } from 'next-auth/react';
 import Layout from '../components/Layout';
 import FoldersList from '../components/folders/FoldersList';
+import LoadingIndicator from '../components/ui/LoadingIndicator';
 import { wrapper } from '../store';
 import { setUser } from '../store/auth/reducer';
 import { fetchFoldersInit } from '../store/folders/reducer';
 import { selectFolders } from '../store/folders/selectors';
+import { selectIsLoading } from '../store/loading/selectors';
 
 export const getServerSideProps = wrapper.getServerSideProps(
     (store) =>
@@ -34,6 +36,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 const FoldersPage = () => {
     const dispatch = useDispatch();
     const folders = useSelector(selectFolders);
+    const isLoading = useSelector(selectIsLoading);
 
     useEffect(() => {
         dispatch(fetchFoldersInit());
@@ -41,7 +44,11 @@ const FoldersPage = () => {
 
     return (
         <Layout title="Folders | Next.js + TypeScript Example">
-            <FoldersList folders={folders} />
+            {isLoading ? (
+                <LoadingIndicator />
+            ) : (
+                <FoldersList folders={folders} />
+            )}
         </Layout>
     );
 };
