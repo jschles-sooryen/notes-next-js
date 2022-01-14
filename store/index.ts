@@ -7,6 +7,7 @@ import {
 } from 'next-redux-cookie-wrapper';
 import authReducer from './auth/reducer';
 import foldersReducer from './folders/reducer';
+import notesReducer from './notes/reducer';
 import loadingReducer from './loading/reducer';
 import rootSaga from './rootSaga';
 
@@ -18,6 +19,7 @@ export const makeStore = wrapMakeStore(() => {
         reducer: {
             auth: authReducer,
             folders: foldersReducer,
+            notes: notesReducer,
             loading: loadingReducer,
         },
         devTools: isDevelopment,
