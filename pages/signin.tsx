@@ -2,7 +2,6 @@ import { Box } from '@mui/system';
 import { Button } from '@mui/material';
 import { NextPage } from 'next';
 import { getSession, signIn } from 'next-auth/react';
-import Layout from '../components/layout';
 import Card from '../components/ui/Card';
 import { wrapper } from '../store';
 import { setUser } from '../store/auth/reducer';
