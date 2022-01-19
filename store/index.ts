@@ -32,7 +32,7 @@ export const makeStore = wrapMakeStore(() => {
             })
                 .prepend(
                     nextReduxCookieMiddleware({
-                        subtrees: ['auth.user', 'folders.folders'],
+                        subtrees: ['auth.user'],
                     })
                 )
                 .concat(sagaMiddleware),
