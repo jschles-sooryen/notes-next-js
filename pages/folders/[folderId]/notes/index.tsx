@@ -5,6 +5,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Box,
 } from '@mui/material';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -12,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from '../../../../components/ui/Card';
 import FolderNameHeader from '../../../../components/folders/FolderNameHeader';
+import NotesList from '../../../../components/notes/NotesList';
 import { serverSideAuthentication } from '../../../../lib/auth';
 import { fetchNotesInit } from '../../../../store/notes/reducer';
 import { selectSelectedFolder } from '../../../../store/folders/selectors';
@@ -23,6 +25,8 @@ import { selectUser } from '../../../../store/auth/selectors';
 import { selectRedirect } from '../../../../store/history/selectors';
 import { clearRedirect } from '../../../../store/history/reducer';
 import { selectIsLoading } from '../../../../store/loading/selectors';
+import { selectNotes } from '../../../../store/notes/selectors';
+import LoadingIndicator from '../../../../components/ui/LoadingIndicator';
 
 export const getServerSideProps = serverSideAuthentication();
 
@@ -31,6 +35,7 @@ const NotesPage: NextPage = () => {
     const user = useSelector(selectUser);
     const isLoading = useSelector(selectIsLoading);
     const selectedFolder = useSelector(selectSelectedFolder);
+    const notes = useSelector(selectNotes);
     const successRedirect = useSelector(selectRedirect);
     const [open, setOpen] = useState(false);
     const router = useRouter();
@@ -66,12 +71,16 @@ const NotesPage: NextPage = () => {
     }, [successRedirect, dispatch]);
 
     return (
-        <Card sx={{ height: '100%' }}>
-            <FolderNameHeader
-                name={selectedFolder}
-                onEdit={onEditSubmit}
-                onDelete={onDeleteClick}
-            />
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Card>
+                <FolderNameHeader
+                    name={selectedFolder}
+                    onEdit={onEditSubmit}
+                    onDelete={onDeleteClick}
+                />
+            </Card>
+
+            {isLoading ? <LoadingIndicator /> : <NotesList notes={notes} />}
 
             <Dialog
                 open={open}
@@ -107,7 +116,7 @@ const NotesPage: NextPage = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Card>
+        </Box>
     );
 };
 
