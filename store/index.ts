@@ -10,6 +10,7 @@ import foldersReducer from './folders/reducer';
 import notesReducer from './notes/reducer';
 import loadingReducer from './loading/reducer';
 import historyReducer from './history/reducer';
+import alertReducer from './alert/reducer';
 import rootSaga from './rootSaga';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -23,6 +24,7 @@ export const makeStore = wrapMakeStore(() => {
             notes: notesReducer,
             loading: loadingReducer,
             history: historyReducer,
+            alert: alertReducer,
         },
         devTools: isDevelopment,
         middleware: (getDefaultMiddleware) =>
