@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/system';
-import { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import Card from '../ui/Card';
 import CardLink from '../ui/CardLink';
 
@@ -23,7 +23,7 @@ const HeaderCardContentContainer = ({ children }) => (
     </Box>
 );
 
-const HeaderButton = ({ children, href, sx, onClick }: Props) => {
+const HeaderButton: FC<Props> = ({ children, href, sx, onClick }) => {
     if (href) {
         return (
             <CardLink href={href} sx={Array.isArray(sx) ? sx : [sx]}>

@@ -14,7 +14,7 @@ type Props = {
     onDelete(): void;
 };
 
-const FolderNameHeader = ({ name, onEdit, onDelete }: Props) => {
+const FolderNameHeader: FC<Props> = ({ name, onEdit, onDelete }) => {
     const isLoading = useSelector(selectIsLoading);
     const [isEditing, setIsEditing] = useState(false);
     const { register, handleSubmit, reset, formState } = useForm({
