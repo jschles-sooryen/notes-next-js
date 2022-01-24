@@ -30,6 +30,16 @@ const Breadcrumbs: FC = () => {
                         <Link href={`/folders/${folderId}/notes`}>
                             {selectedFolder}
                         </Link>
+                        {router.pathname === '/create-note' ? (
+                            <>
+                                <BreadcrumbArrow />
+                                <Link
+                                    href={`/create-note?folderId=${folderId}`}
+                                >
+                                    Create Note
+                                </Link>
+                            </>
+                        ) : null}
                     </>
                 ) : null}
 
@@ -37,6 +47,13 @@ const Breadcrumbs: FC = () => {
                     <>
                         <BreadcrumbArrow />
                         <Link href="/create-folder">Create Folder</Link>
+                    </>
+                ) : null}
+
+                {!folderId && router.pathname === '/create-note' ? (
+                    <>
+                        <BreadcrumbArrow />
+                        <Link href="/create-note">Choose Folder</Link>
                     </>
                 ) : null}
             </Box>
