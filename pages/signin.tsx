@@ -5,6 +5,7 @@ import { getSession, signIn } from 'next-auth/react';
 import Card from '../components/ui/Card';
 import { wrapper } from '../store';
 import { setUser } from '../store/auth/reducer';
+import BasicButton from '../components/ui/BasicButton';
 
 export const getServerSideProps = wrapper.getServerSideProps(
     (store) =>
@@ -50,10 +51,7 @@ const SignInPage: NextPage = (props) => {
             >
                 Welcome! Please Sign In.
             </Box>
-            <Button
-                disableElevation
-                variant="contained"
-                color="secondary"
+            <BasicButton
                 onClick={handleSignIn}
                 sx={{
                     display: 'block',
@@ -61,11 +59,10 @@ const SignInPage: NextPage = (props) => {
                     marginRight: 'auto',
                     marginTop: 1,
                     marginBottom: 1,
-                    textTransform: 'unset',
                 }}
             >
                 Sign In w/ Google
-            </Button>
+            </BasicButton>
         </Card>
     );
 };

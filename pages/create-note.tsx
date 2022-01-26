@@ -21,7 +21,7 @@ const CreateNotePage: NextPage = () => {
     const folders = useSelector(selectFolders);
     const selectedFolder = useSelector(selectSelectedFolder);
     const [selectedFolderId, setSelectedFolderId] = useState(
-        router.query.folderId || ''
+        (router.query.folderId as string) || ''
     );
 
     const onFolderSelect = () => {};
@@ -41,13 +41,13 @@ const CreateNotePage: NextPage = () => {
                 margin: '0 auto',
             }}
         >
-            <Card>
-                {selectedFolder && selectedFolderId ? (
-                    <NoteForm />
-                ) : (
-                    <ChooseFolder folders={folders} onSelect={onFolderSelect} />
-                )}
-            </Card>
+            <ChooseFolder
+                folders={folders}
+                onSelect={onFolderSelect}
+                selectedFolder={selectedFolder}
+                selectedFolderId={selectedFolderId}
+            />
+            {selectedFolder && selectedFolderId ? <NoteForm /> : null}
         </Box>
     );
 };
