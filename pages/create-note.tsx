@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { serverSideAuthentication } from '../lib/auth';
+import { Box } from '@mui/material';
 import NoteForm from '../components/form/NoteForm';
+import ChooseFolder from '../components/form/ChooseFolder';
 import { fetchFoldersInit, setSelectedFolder } from '../store/folders/reducer';
 import {
     selectSelectedFolder,
     selectFolders,
 } from '../store/folders/selectors';
-import { Box } from '@mui/material';
-import ChooseFolder from '../components/form/ChooseFolder';
-import Card from '../components/ui/Card';
+import { selectRedirect } from '../store/history/selectors';
+import { clearRedirect } from '../store/history/reducer';
+import { serverSideAuthentication } from '../lib/auth';
 
 export const getServerSideProps = serverSideAuthentication();
 
@@ -20,6 +21,7 @@ const CreateNotePage: NextPage = () => {
     const router = useRouter();
     const folders = useSelector(selectFolders);
     const selectedFolder = useSelector(selectSelectedFolder);
+    const successRedirect = useSelector(selectRedirect);
     const [selectedFolderId, setSelectedFolderId] = useState(
         (router.query.folderId as string) || ''
     );
@@ -40,11 +42,22 @@ const CreateNotePage: NextPage = () => {
         });
     };
 
+    const onNoteSubmit = (data) => {
+        // TODO
+    };
+
     useEffect(() => {
         if (!folders.length) {
             dispatch(fetchFoldersInit());
         }
     }, [folders]);
+
+    useEffect(() => {
+        if (successRedirect) {
+            router.push(successRedirect);
+            dispatch(clearRedirect());
+        }
+    }, [successRedirect, dispatch]);
 
     return (
         <Box
@@ -64,7 +77,7 @@ const CreateNotePage: NextPage = () => {
                 isChoosingFolder={isChoosingFolder}
             />
             {selectedFolder && selectedFolderId ? (
-                <NoteForm onSubmit={() => {}} />
+                <NoteForm onSubmit={onNoteSubmit} />
             ) : null}
         </Box>
     );
