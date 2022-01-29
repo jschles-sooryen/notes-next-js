@@ -46,13 +46,14 @@ const CreateNotePage: NextPage = () => {
         }
     }, [folders]);
 
-    console.log('folders available', folders);
-
     return (
         <Box
             sx={{
                 maxWidth: '80%',
                 margin: '0 auto',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
             }}
         >
             <ChooseFolder
@@ -62,7 +63,9 @@ const CreateNotePage: NextPage = () => {
                 setIsChoosingFolder={setIsChoosingFolder}
                 isChoosingFolder={isChoosingFolder}
             />
-            {selectedFolder && selectedFolderId ? <NoteForm /> : null}
+            {selectedFolder && selectedFolderId ? (
+                <NoteForm onSubmit={() => {}} />
+            ) : null}
         </Box>
     );
 };

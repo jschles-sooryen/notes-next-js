@@ -17,6 +17,7 @@ const FoldersPage: NextPage = () => {
 
     useEffect(() => {
         dispatch(fetchFoldersInit());
+        // TODO: Reset selected folder
     }, []);
 
     return (
