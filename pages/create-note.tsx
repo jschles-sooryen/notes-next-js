@@ -10,6 +10,7 @@ import {
     selectSelectedFolder,
     selectFolders,
 } from '../store/folders/selectors';
+import { createNoteInit } from '../store/notes/reducer';
 import { selectRedirect } from '../store/history/selectors';
 import { clearRedirect } from '../store/history/reducer';
 import { serverSideAuthentication } from '../lib/auth';
@@ -43,7 +44,8 @@ const CreateNotePage: NextPage = () => {
     };
 
     const onNoteSubmit = (data) => {
-        // TODO
+        const payload = { ...data, id: router.query.folderId };
+        dispatch(createNoteInit(payload));
     };
 
     useEffect(() => {

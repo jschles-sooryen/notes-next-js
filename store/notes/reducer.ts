@@ -21,7 +21,11 @@ const notesSlice = createSlice({
         fetchNotesFail() {},
         createNoteInit: {
             reducer: () => {},
-            prepare: (note: { name: string; description: string }) => ({
+            prepare: (note: {
+                name: string;
+                description: string;
+                id: string;
+            }) => ({
                 payload: note,
             }),
         },
