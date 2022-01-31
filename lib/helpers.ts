@@ -25,3 +25,11 @@ export const formatDate = (
 
     return formattedDate;
 };
+
+export const renderDescriptionFirstLine = (description: string) => {
+    if (description.includes('\n')) {
+        return description.split('\n')[0];
+    }
+
+    return description;
+};
