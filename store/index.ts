@@ -40,6 +40,7 @@ export const makeStore = wrapMakeStore(() => {
                             'alert.message',
                             'folders.selected',
                             'folders.folders',
+                            'notes.notes',
                         ],
                     })
                 )
