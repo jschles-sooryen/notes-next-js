@@ -2,20 +2,24 @@ import mongoose, { Schema } from 'mongoose';
 
 const { String, ObjectId } = Schema.Types;
 
-export const folderSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  notes: [
-    { type: ObjectId, ref: 'notes' },
-  ],
-  user: {
-    type: ObjectId,
-    ref: 'users',
-  },
-});
+export const folderSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        notes: [{ type: ObjectId, ref: 'notes' }],
+        user: {
+            type: ObjectId,
+            ref: 'users',
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
 
-const Folder = mongoose.models.folders || mongoose.model('folders', folderSchema);
+const Folder =
+    mongoose.models.folders || mongoose.model('folders', folderSchema);
 
 export default Folder;
