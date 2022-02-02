@@ -4,7 +4,6 @@ import SaveRounded from '@mui/icons-material/SaveRounded';
 import {
     Box,
     Select,
-    Skeleton,
     Typography,
     MenuItem,
     InputLabel,
@@ -17,6 +16,7 @@ import { Folder } from '../../interfaces';
 import { selectIsLoading } from '../../store/loading/selectors';
 import BasicButton from '../ui/BasicButton';
 import Card from '../ui/Card';
+import Skeleton from '../ui/Skeleton';
 
 interface Props {
     folders: Folder[];
@@ -98,20 +98,16 @@ const ChooseFolder: FC<Props> = ({
                     minWidth: '40%',
                 }}
             >
-                {isLoading ? (
-                    <Skeleton animation="wave" width="100%" />
-                ) : (
-                    <>
-                        <FolderRounded
-                            sx={{
-                                marginRight: 1,
-                                fontSize: '28px',
-                                verticalAlign: 'text-top',
-                            }}
-                        />{' '}
-                        {selectedFolder}
-                    </>
-                )}
+                <Skeleton>
+                    <FolderRounded
+                        sx={{
+                            marginRight: 1,
+                            fontSize: '28px',
+                            verticalAlign: 'text-top',
+                        }}
+                    />{' '}
+                    {selectedFolder}
+                </Skeleton>
             </Typography>
 
             <BasicButton
