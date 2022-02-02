@@ -42,6 +42,8 @@ const NotesPage: NextPage = () => {
 
     const folderId = router.query.folderId as string;
 
+    console.log({ notes });
+
     const onEditSubmit = (data) => {
         const updatedFolder = { name: data.name, _id: folderId, user: user.id };
         dispatch(updateFolderInit(updatedFolder));
