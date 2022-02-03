@@ -3,6 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     Box,
     Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     styled,
     TextField,
     TextFieldProps,
@@ -41,11 +46,18 @@ interface Props {
 const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
     const dispatch = useDispatch();
     const [isUpdating, setIsUpdating] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
     const isLoading = useSelector(selectIsLoading);
 
     const onUpdate = (data) => {
         const payload = { ...data, folderId, noteId };
         dispatch(updateNoteInit(payload));
+    };
+
+    const onDelete = () => {};
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     React.useEffect(() => {
@@ -61,63 +73,100 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
             isUpdating
         />
     ) : (
-        <Card
-            sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
-            <Box
+        <>
+            <Card
                 sx={{
+                    height: '100%',
                     display: 'flex',
-                    alignItems: 'start',
-                    justifyContent: 'space-between',
+                    flexDirection: 'column',
                 }}
             >
-                <Box>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            marginBottom: 1,
-                            marginTop: 0,
-                            lineHeight: 1,
-                        }}
-                    >
-                        <Skeleton>{note?.name}</Skeleton>
-                    </Typography>
-                    <Typography paragraph>
-                        <Skeleton>
-                            Last updated: {formatDate(note?.updatedAt)}
-                        </Skeleton>
-                    </Typography>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'start',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <Box>
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                marginBottom: 1,
+                                marginTop: 0,
+                                lineHeight: 1,
+                            }}
+                        >
+                            <Skeleton>{note?.name}</Skeleton>
+                        </Typography>
+                        <Typography paragraph>
+                            <Skeleton>
+                                Last updated: {formatDate(note?.updatedAt)}
+                            </Skeleton>
+                        </Typography>
+                    </Box>
+
+                    <Box>
+                        <Button
+                            variant="outlined"
+                            sx={{ marginRight: 2, textTransform: 'unset' }}
+                            onClick={() => setIsUpdating(true)}
+                            startIcon={<Edit />}
+                            disabled={isLoading}
+                        >
+                            Update Note
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            sx={{ textTransform: 'unset' }}
+                            color="error"
+                            onClick={() => setOpen(true)}
+                            startIcon={<Delete />}
+                            disabled={isLoading}
+                        >
+                            Delete Note
+                        </Button>
+                    </Box>
                 </Box>
 
-                <Box>
+                <NoteDescription value={note?.description} />
+            </Card>
+
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                aria-labelledby="delete-confirm-title"
+                aria-describedby="delete-confirm-description"
+            >
+                <DialogTitle id="delete-confirm-title">
+                    {'Delete Note?'}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="delete-confirm-description">
+                        Are you sure you want to delete "{note?.name}"?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
                     <Button
                         variant="outlined"
-                        sx={{ marginRight: 2, textTransform: 'unset' }}
-                        onClick={() => setIsUpdating(true)}
-                        startIcon={<Edit />}
+                        color="success"
+                        onClick={onDelete}
                         disabled={isLoading}
                     >
-                        Update Note
+                        Confirm
                     </Button>
                     <Button
                         variant="outlined"
-                        sx={{ textTransform: 'unset' }}
                         color="error"
-                        onClick={() => {}}
-                        startIcon={<Delete />}
+                        onClick={handleClose}
+                        autoFocus
                         disabled={isLoading}
                     >
-                        Delete Note
+                        Cancel
                     </Button>
-                </Box>
-            </Box>
-
-            <NoteDescription value={note?.description} />
-        </Card>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 
