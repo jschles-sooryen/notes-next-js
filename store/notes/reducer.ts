@@ -55,12 +55,19 @@ const notesSlice = createSlice({
             });
         },
         updateNoteFail() {},
-        // deleteNoteInit() {},
-        // deleteNoteSuccess(state, action) {
-        //   state.notes = state.notes.filter((notes) => notes._id !== action.payload);
-        //   state.selected = null;
-        // },
-        // deleteNoteFail() {},
+        deleteNoteInit: {
+            reducer: () => {},
+            prepare: (data: { folderId: string; noteId: string }) => ({
+                payload: data,
+            }),
+        },
+        deleteNoteSuccess(state, action) {
+            state.notes = state.notes.filter(
+                (notes) => notes._id !== action.payload
+            );
+            state.selected = null;
+        },
+        deleteNoteFail() {},
         // setSelectedNote(state, action) {
         //   state.selected = action.payload;
         // },
@@ -81,9 +88,9 @@ export const {
     updateNoteInit,
     updateNoteSuccess,
     updateNoteFail,
-    // deleteNoteInit,
-    // deleteNoteSuccess,
-    // deleteNoteFail,
+    deleteNoteInit,
+    deleteNoteSuccess,
+    deleteNoteFail,
     // setSelectedNote,
     // toggleCreateNote,
     resetNotes,
