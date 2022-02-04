@@ -1,3 +1,6 @@
+import * as React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 import Edit from '@mui/icons-material/Edit';
 import FolderRounded from '@mui/icons-material/FolderRounded';
 import SaveRounded from '@mui/icons-material/SaveRounded';
@@ -9,9 +12,6 @@ import {
     InputLabel,
     FormControl,
 } from '@mui/material';
-import { FC, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import { Folder } from '../../interfaces';
 import { selectIsLoading } from '../../store/loading/selectors';
 import BasicButton from '../ui/BasicButton';
@@ -26,7 +26,7 @@ interface Props {
     isChoosingFolder: boolean;
 }
 
-const ChooseFolder: FC<Props> = ({
+const ChooseFolder: React.FC<Props> = ({
     folders,
     onSelect,
     selectedFolder,
