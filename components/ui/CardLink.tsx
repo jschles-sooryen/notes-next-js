@@ -1,19 +1,17 @@
-import { FC } from 'react';
+import * as React from 'react';
 import { SxProps, Theme } from '@mui/material';
-import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
 import Card from './Card';
 import Link from './Link';
 
-type Props = {
-    children?: ReactNode;
+interface Props {
+    children?: React.ReactNode;
     href?: string;
     sx?: SxProps<Theme>;
     cardSx?: SxProps<Theme>;
-};
+}
 
-const CardLink: FC<Props> = ({ children, href, sx, cardSx }) => {
+const CardLink: React.FC<Props> = ({ children, href, sx, cardSx }) => {
     const router = useRouter();
 
     const isActive = router.pathname === href;

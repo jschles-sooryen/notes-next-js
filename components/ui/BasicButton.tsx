@@ -1,13 +1,16 @@
-import { FC, ReactNode, forwardRef } from 'react';
+import * as React from 'react';
 import { SxProps, Theme } from '@mui/material';
 import Button, { ButtonProps } from '@mui/material/Button';
 
 interface Props extends ButtonProps {
-    children: ReactNode;
+    children: React.ReactNode;
     sx?: SxProps<Theme>;
 }
 
-const BasicButton: FC<Props> = forwardRef(function BasicButton(props, ref) {
+const BasicButton: React.FC<Props> = React.forwardRef(function BasicButton(
+    props,
+    ref
+) {
     const { sx, children, ...other } = props;
     return (
         <Button
