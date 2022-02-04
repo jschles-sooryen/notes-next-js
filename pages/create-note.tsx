@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
@@ -23,10 +23,12 @@ const CreateNotePage: NextPage = () => {
     const folders = useSelector(selectFolders);
     const selectedFolder = useSelector(selectSelectedFolder);
     const successRedirect = useSelector(selectRedirect);
-    const [selectedFolderId, setSelectedFolderId] = useState(
+    const [selectedFolderId, setSelectedFolderId] = React.useState(
         (router.query.folderId as string) || ''
     );
-    const [isChoosingFolder, setIsChoosingFolder] = useState(!selectedFolder);
+    const [isChoosingFolder, setIsChoosingFolder] = React.useState(
+        !selectedFolder
+    );
 
     const onFolderSelect = (data) => {
         dispatch(setSelectedFolder(data.folder));
@@ -48,13 +50,13 @@ const CreateNotePage: NextPage = () => {
         dispatch(createNoteInit(payload));
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!folders.length) {
             dispatch(fetchFoldersInit());
         }
     }, [folders]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (successRedirect) {
             router.push(successRedirect);
             dispatch(clearRedirect());

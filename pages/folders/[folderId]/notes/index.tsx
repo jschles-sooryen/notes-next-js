@@ -1,3 +1,7 @@
+import * as React from 'react';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Button,
     Dialog,
@@ -7,10 +11,6 @@ import {
     DialogTitle,
     Box,
 } from '@mui/material';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Card from '../../../../components/ui/Card';
 import FolderNameHeader from '../../../../components/folders/FolderNameHeader';
 import NotesList from '../../../../components/notes/NotesList';
@@ -37,7 +37,7 @@ const NotesPage: NextPage = () => {
     const selectedFolder = useSelector(selectSelectedFolder);
     const notes = useSelector(selectNotes);
     const successRedirect = useSelector(selectRedirect);
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = React.useState(false);
     const router = useRouter();
 
     const folderId = router.query.folderId as string;
@@ -61,11 +61,11 @@ const NotesPage: NextPage = () => {
         setOpen(false);
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         dispatch(fetchNotesInit(folderId));
     }, []);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (successRedirect) {
             router.push(successRedirect);
             dispatch(clearRedirect());
