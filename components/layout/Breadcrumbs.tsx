@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Box } from '@mui/system';
 import Card from '../ui/Card';
 import Link from '../ui/Link';
+import Skeleton from '../ui/Skeleton';
 import { selectSelectedFolder } from '../../store/folders/selectors';
 import { findNote } from '../../lib/helpers';
 import { selectNotes } from '../../store/notes/selectors';
@@ -35,7 +36,7 @@ const Breadcrumbs: React.FC = () => {
                     <>
                         <BreadcrumbArrow />
                         <Link href={`/folders/${folderId}/notes`}>
-                            {selectedFolder}
+                            <Skeleton width="100px">{selectedFolder}</Skeleton>
                         </Link>
 
                         {!!selectedNote ? (
@@ -44,7 +45,9 @@ const Breadcrumbs: React.FC = () => {
                                 <Link
                                     href={`/folders/${folderId}/notes/${noteId}`}
                                 >
-                                    {selectedNote.name}
+                                    <Skeleton width="100px">
+                                        {selectedNote.name}
+                                    </Skeleton>
                                 </Link>
                             </>
                         ) : null}
