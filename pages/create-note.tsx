@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { Box } from '@mui/material';
-import NoteForm from '../components/form/NoteForm';
+// import NoteForm from '../components/form/NoteForm';
 import ChooseFolder from '../components/form/ChooseFolder';
 import { fetchFoldersInit, setSelectedFolder } from '../store/folders/reducer';
 import {
@@ -14,6 +15,10 @@ import { createNoteInit } from '../store/notes/reducer';
 import { selectRedirect } from '../store/history/selectors';
 import { clearRedirect } from '../store/history/reducer';
 import { serverSideAuthentication } from '../lib/auth';
+
+const NoteEditor = dynamic(() => import('../components/form/NoteEditor'), {
+    ssr: false,
+});
 
 export const getServerSideProps = serverSideAuthentication();
 
@@ -81,7 +86,8 @@ const CreateNotePage: NextPage = () => {
                 isChoosingFolder={isChoosingFolder}
             />
             {selectedFolder && selectedFolderId ? (
-                <NoteForm onSubmit={onNoteSubmit} />
+                // <NoteForm onSubmit={onNoteSubmit} />
+                <NoteEditor onSubmit={onNoteSubmit} />
             ) : null}
         </Box>
     );
