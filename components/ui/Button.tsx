@@ -24,6 +24,7 @@ const Button: React.FC<Props> = React.forwardRef(function Button(
             sx={[
                 {
                     textTransform: 'unset',
+                    justifyContent: 'start',
                     backgroundColor: color,
                     color: 'primary.main',
                     '&:hover': {
