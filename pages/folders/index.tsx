@@ -7,6 +7,7 @@ import { selectFolders } from '../../store/folders/selectors';
 import { selectIsLoading } from '../../store/loading/selectors';
 import { serverSideAuthentication } from '../../lib/auth';
 import { NextPage } from 'next';
+import SelectionContainer from '../../components/ui/SelectionContainer';
 
 export const getServerSideProps = serverSideAuthentication();
 
@@ -21,13 +22,9 @@ const FoldersPage: NextPage = () => {
     }, []);
 
     return (
-        <>
-            {isLoading ? (
-                <LoadingIndicator />
-            ) : (
-                <FoldersList folders={folders} />
-            )}
-        </>
+        <SelectionContainer>
+            {isLoading ? <LoadingIndicator /> : <FoldersList />}
+        </SelectionContainer>
     );
 };
 
