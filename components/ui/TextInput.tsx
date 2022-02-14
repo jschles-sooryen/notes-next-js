@@ -24,19 +24,19 @@ const CustomInput = styled(OutlinedInput, {
             : theme.palette.secondary.main,
     border: 'none',
     '&:hover': {
-        // outline: `0.5px outset ${theme.palette.secondary.main}`,
-        [`& .${outlinedInputClasses.notchedOutline}`]: {
-            borderColor: theme.palette.secondary.main,
-        },
+        // [`& .${outlinedInputClasses.notchedOutline}`]: {
+        //     borderColor: theme.palette.secondary.main,
+        // },
     },
     '&:focus': {
         // outline: `0.5px outset ${theme.palette.secondary.main}`,
-        [`& .${outlinedInputClasses.notchedOutline}`]: {
-            borderColor: theme.palette.secondary.main,
-        },
     },
     [`& .${outlinedInputClasses.notchedOutline}`]: {
         borderColor: 'transparent',
+        borderWidth: '1px !important',
+    },
+    [`& .Mui-focused.${outlinedInputClasses.notchedOutline}`]: {
+        borderWidth: 5,
     },
 }));
 
