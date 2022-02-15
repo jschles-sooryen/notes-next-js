@@ -1,18 +1,18 @@
 import * as React from 'react';
 import {
     Button as MuiButton,
-    ButtonProps,
+    ButtonProps as MuiButtonProps,
     SxProps,
     Theme,
 } from '@mui/material';
 
-interface Props extends Omit<ButtonProps, 'color'> {
+export interface ButtonProps extends Omit<MuiButtonProps, 'color'> {
     children: React.ReactNode;
     sx?: SxProps<Theme>;
     color?: string;
 }
 
-const Button: React.FC<Props> = React.forwardRef(function Button(
+const Button: React.FC<ButtonProps> = React.forwardRef(function Button(
     { sx, children, color = '#fff', ...other },
     ref
 ) {
