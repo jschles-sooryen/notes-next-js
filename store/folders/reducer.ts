@@ -5,6 +5,7 @@ import { Folder } from '../../interfaces';
 const initialState = {
     folders: [],
     selected: '',
+    updating: '',
 };
 
 const foldersSlice = createSlice({
@@ -57,6 +58,9 @@ const foldersSlice = createSlice({
         clearSelectedFolder(state) {
             state.selected = '';
         },
+        setUpdating(state, action) {
+            state.updating = action.payload;
+        },
         resetFolders: () => initialState,
     },
     extraReducers: {
@@ -84,6 +88,7 @@ export const {
     deleteFolderFail,
     setSelectedFolder,
     clearSelectedFolder,
+    setUpdating,
     resetFolders,
 } = foldersSlice.actions;
 
