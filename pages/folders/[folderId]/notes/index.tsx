@@ -63,7 +63,7 @@ const NotesPage: NextPage = () => {
 
     React.useEffect(() => {
         dispatch(fetchNotesInit(folderId));
-    }, []);
+    }, [folderId]);
 
     React.useEffect(() => {
         if (successRedirect) {
