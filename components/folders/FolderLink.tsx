@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import {
     Box,
     Collapse,
@@ -36,6 +36,7 @@ interface Props extends Omit<Folder, 'user'> {
 
 const FolderButton: React.FC<Props> = ({ _id, name, isNav = false }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const updatingFolder = useSelector(selectUpdatingFolder);
     const isLoading = useSelector(selectIsLoading);
     const user = useSelector(selectUser);
@@ -49,6 +50,9 @@ const FolderButton: React.FC<Props> = ({ _id, name, isNav = false }) => {
             [name]
         ),
     });
+
+    const folderId = router.query.folderId as string;
+    const isSelected = folderId && folderId === _id;
 
     const handleIconClick = () => {
         setIsOptionsOpen((prev) => !prev);
@@ -100,9 +104,10 @@ const FolderButton: React.FC<Props> = ({ _id, name, isNav = false }) => {
                 <Box
                     sx={{
                         borderRadius: '4px',
-                        backgroundColor: isOptionsOpen
-                            ? changeColor
-                            : 'transparent',
+                        backgroundColor:
+                            isOptionsOpen || isSelected
+                                ? changeColor
+                                : 'transparent',
                         '&:hover': {
                             backgroundColor: isUpdatingFolder
                                 ? 'transparent'
