@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Cancel from '@mui/icons-material/Cancel';
 import { useForm, Controller } from 'react-hook-form';
-import Card from '../ui/Card';
+import TextInput from '../ui/TextInput';
 import BasicButton from '../ui/BasicButton';
 import EditorContainer from '../ui/EditorContainer';
 
@@ -39,9 +39,7 @@ const NoteEditor: React.FC<Props> = ({
             setTimeout((): void => {
                 setEditorHeight(
                     `${
-                        rootRef?.current?.getBoundingClientRect().height -
-                        32 -
-                        61
+                        rootRef?.current?.getBoundingClientRect().height - 109
                     }px`
                 );
             }, 0);
@@ -55,8 +53,9 @@ const NoteEditor: React.FC<Props> = ({
     }, []);
 
     return (
-        <Card
+        <Box
             sx={{
+                paddingY: 2,
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -76,16 +75,16 @@ const NoteEditor: React.FC<Props> = ({
                         name="name"
                         control={control}
                         render={({ field: { onChange, value, name, ref } }) => (
-                            <TextField
+                            <TextInput
+                                variant="gray"
                                 fullWidth
                                 required
                                 name={name}
                                 value={value}
                                 onChange={onChange}
                                 inputRef={ref}
-                                label="Note Title"
+                                placeholder="Note Title"
                                 error={!!formState?.errors?.name}
-                                helperText={formState?.errors?.name?.message}
                             />
                         )}
                         rules={{ required: 'Note Title is required.' }}
@@ -143,7 +142,7 @@ const NoteEditor: React.FC<Props> = ({
                     }}
                 />
             </EditorContainer>
-        </Card>
+        </Box>
     );
 };
 

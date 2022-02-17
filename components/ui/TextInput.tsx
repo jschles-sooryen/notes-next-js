@@ -21,7 +21,7 @@ const CustomInput = styled(OutlinedInput, {
     backgroundColor:
         variant === 'white'
             ? theme.palette.secondary.light
-            : theme.palette.secondary.main,
+            : theme.palette.bg.main,
     border: 'none',
     '&:hover': {
         // [`& .${outlinedInputClasses.notchedOutline}`]: {
