@@ -7,7 +7,7 @@ import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Cancel from '@mui/icons-material/Cancel';
 import { useForm, Controller } from 'react-hook-form';
 import TextInput from '../ui/TextInput';
-import BasicButton from '../ui/BasicButton';
+import Button from '../ui/Button';
 import EditorContainer from '../ui/EditorContainer';
 
 interface Props {
@@ -98,7 +98,8 @@ const NoteEditor: React.FC<Props> = ({
                     }}
                 >
                     {isUpdating ? (
-                        <BasicButton
+                        <Button
+                            color="bg.main"
                             onClick={onCancel}
                             startIcon={<Cancel />}
                             sx={{
@@ -108,9 +109,10 @@ const NoteEditor: React.FC<Props> = ({
                             }}
                         >
                             Cancel
-                        </BasicButton>
+                        </Button>
                     ) : null}
-                    <BasicButton
+                    <Button
+                        color="bg.main"
                         onClick={handleSubmit(onSubmit)}
                         startIcon={<ArrowUpward />}
                         sx={{
@@ -119,7 +121,7 @@ const NoteEditor: React.FC<Props> = ({
                         }}
                     >
                         Submit
-                    </BasicButton>
+                    </Button>
                 </Box>
             </Box>
 
