@@ -7,14 +7,17 @@ import NotesList from './NotesList';
 import SelectionContainer from '../ui/SelectionContainer';
 import Button from '../ui/Button';
 import Link from '../ui/Link';
+import LoadingIndicator from '../ui/LoadingIndicator';
 import { selectSelectedFolder } from '../../store/folders/selectors';
 import { selectNotes } from '../../store/notes/selectors';
 import { fetchNotesInit } from '../../store/notes/reducer';
+import { selectIsLoading } from '../../store/loading/selectors';
 
 const NoteSelection: React.FC = () => {
     const dispatch = useDispatch();
     const selectedFolder = useSelector(selectSelectedFolder);
     const notes = useSelector(selectNotes);
+    const isLoading = useSelector(selectIsLoading);
     const router = useRouter();
 
     const folderId = router.query.folderId as string;
@@ -42,13 +45,17 @@ const NoteSelection: React.FC = () => {
                     Add New Note
                 </Button>
             </Link>
-            <Box sx={{ marginTop: 3 }}>
-                {notes.length ? (
-                    <NotesList notes={notes} />
-                ) : (
-                    <Box>No notes found.</Box>
-                )}
-            </Box>
+            {isLoading ? (
+                <LoadingIndicator />
+            ) : (
+                <Box sx={{ marginTop: 3 }}>
+                    {notes.length ? (
+                        <NotesList notes={notes} />
+                    ) : (
+                        <Box>No notes found.</Box>
+                    )}
+                </Box>
+            )}
         </SelectionContainer>
     );
 };
