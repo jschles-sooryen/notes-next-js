@@ -25,6 +25,7 @@ const Navigation: React.FC = () => {
     const user = useSelector(selectUser);
     const hasNotes = router.pathname.includes('notes');
     const isFoldersPage = router.pathname === '/folders';
+
     return (
         <NavigationContainer>
             <Box>
