@@ -73,6 +73,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
         href,
         noLinkStyle,
         role, // Link don't have roles.
+        sx,
         ...other
     } = props;
 
@@ -121,9 +122,12 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
             className={className}
             ref={ref}
             to={href}
-            sx={{
-                textDecoration: 'none',
-            }}
+            sx={[
+                {
+                    textDecoration: 'none',
+                },
+                ...(Array.isArray(sx) ? sx : [sx]),
+            ]}
             {...other}
         />
     );
