@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { Stack, Box, useMediaQuery, Theme, Grid } from '@mui/material';
+import { Stack, Box, Grid } from '@mui/material';
 import Link from '../ui/Link';
 import FolderLink from './FolderLink';
 import FolderLinkMobile from './FolderLinkMobile';
-import { selectFolders } from '../../store/folders/selectors';
+import useMediaQuery from '@lib/hooks/useMediaQuery';
+import { selectFolders } from '@store/folders/selectors';
 import { Folder } from '../../interfaces';
 
 const DesktopFoldersList: React.FC<{ folders: Folder[]; isNav?: boolean }> = ({
@@ -32,12 +33,8 @@ const DesktopFoldersList: React.FC<{ folders: Folder[]; isNav?: boolean }> = ({
 const MobileFoldersList: React.FC<{ folders: Folder[] }> = ({ folders }) => (
     <Grid spacing={2} container sx={{ paddingBottom: 2 }}>
         {folders.map((folder) => (
-            <Grid item xs={6}>
-                <FolderLinkMobile
-                    key={folder._id}
-                    _id={folder._id}
-                    name={folder.name}
-                />
+            <Grid item xs={6} key={folder._id}>
+                <FolderLinkMobile _id={folder._id} name={folder.name} />
             </Grid>
         ))}
     </Grid>
@@ -49,9 +46,7 @@ interface Props {
 
 const FoldersList: React.FC<Props> = ({ isNav = false }) => {
     const folders = useSelector(selectFolders);
-    const isMobile = useMediaQuery((theme: Theme) =>
-        theme.breakpoints.down('sm')
-    );
+    const { isMobile } = useMediaQuery();
 
     return (
         <Box
