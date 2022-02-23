@@ -49,7 +49,7 @@ const AddButtonBase: React.FC<
     Omit<ButtonProps, 'children'> & { text: string }
 > = ({ fullWidth = true, text, ...other }) => (
     <Button startIcon={<AddIcon />} {...other} fullWidth={fullWidth}>
-        Add New Folder
+        {text}
     </Button>
 );
 

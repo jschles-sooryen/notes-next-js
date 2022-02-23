@@ -5,8 +5,9 @@ import {
     renderDescriptionFirstLine,
     decodeHtml,
     formatDate,
-} from '../../lib/helpers';
-import Link from '../ui/Link';
+} from '@lib/helpers';
+import useMediaQuery from '@lib/hooks/useMediaQuery';
+import Link from '@components/ui/Link';
 
 interface Props {
     folderId: string;
@@ -25,6 +26,7 @@ const NoteCard: React.FC<Props> = ({
     updatedAt,
     selectedNote,
 }) => {
+    const { isMobile } = useMediaQuery();
     const isSelected = noteId === selectedNote;
     return (
         <Link
@@ -38,7 +40,7 @@ const NoteCard: React.FC<Props> = ({
                     padding: 2,
                     borderRadius: 2,
                     transition: 'opacity 250ms',
-                    opacity: isSelected ? 1 : 0.5,
+                    opacity: isSelected || isMobile ? 1 : 0.5,
                     '&:hover': {
                         opacity: 1,
                         cursor: 'pointer',
