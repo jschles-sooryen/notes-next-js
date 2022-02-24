@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 import {
@@ -13,18 +13,27 @@ import {
 } from '@mui/material';
 import UserIcon from '@mui/icons-material/AccountCircleRounded';
 import FolderIcon from '@mui/icons-material/FolderRounded';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Link from '@components/ui/Link';
 import AddButton from '@components/ui/AddButton';
-import { resetFolders } from '@store/folders/reducer';
+import { resetFolders, setUpdating } from '@store/folders/reducer';
+import { selectSelectedFolder } from '@store/folders/selectors';
 import { resetNotes } from '@store/notes/reducer';
 
 interface Props {
     open: boolean;
     onClose(): void;
+    onDeleteFolderClick(): void;
 }
 
-const NavigationDrawer: React.FC<Props> = ({ open, onClose }) => {
+const NavigationDrawer: React.FC<Props> = ({
+    open,
+    onClose,
+    onDeleteFolderClick,
+}) => {
     const dispatch = useDispatch();
+    const selectedFolder = useSelector(selectSelectedFolder);
     const router = useRouter();
     const folderId = router.query.folderId;
     const noteId = router.query.noteId;
@@ -36,6 +45,16 @@ const NavigationDrawer: React.FC<Props> = ({ open, onClose }) => {
         dispatch(resetFolders());
         dispatch(resetNotes());
         await signOut();
+    };
+
+    const handleUpdateFolderClick = () => {
+        dispatch(setUpdating(folderId));
+        onClose();
+    };
+
+    const handleDeleteFolderClick = () => {
+        onDeleteFolderClick();
+        onClose();
     };
 
     React.useEffect(() => {
@@ -62,15 +81,15 @@ const NavigationDrawer: React.FC<Props> = ({ open, onClose }) => {
                     </Link>
                     {showFolderOptions && (
                         <>
-                            <ListItem button onClick={() => {}}>
+                            <ListItem button onClick={handleUpdateFolderClick}>
                                 <ListItemIcon>
-                                    <UserIcon color="primary" />
+                                    <EditIcon color="primary" />
                                 </ListItemIcon>
                                 <ListItemText primary="Update Folder" />
                             </ListItem>
-                            <ListItem button onClick={() => {}}>
+                            <ListItem button onClick={handleDeleteFolderClick}>
                                 <ListItemIcon>
-                                    <UserIcon color="primary" />
+                                    <DeleteIcon color="primary" />
                                 </ListItemIcon>
                                 <ListItemText primary="Delete Folder" />
                             </ListItem>
