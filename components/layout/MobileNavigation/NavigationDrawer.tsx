@@ -48,8 +48,10 @@ const NavigationDrawer: React.FC<Props> = ({
     };
 
     const handleUpdateFolderClick = () => {
-        dispatch(setUpdating(folderId));
         onClose();
+        setTimeout(() => {
+            dispatch(setUpdating(folderId));
+        }, 0);
     };
 
     const handleDeleteFolderClick = () => {

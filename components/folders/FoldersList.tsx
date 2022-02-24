@@ -73,7 +73,7 @@ const FoldersList: React.FC<Props> = ({ isNav = false }) => {
             {isMobile ? (
                 <MobileFoldersList folders={folders} />
             ) : (
-                <DesktopFoldersList folders={folders} />
+                <DesktopFoldersList folders={folders} isNav={isNav} />
             )}
         </Box>
     );
