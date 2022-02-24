@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '../../ckeditor5/build/ckeditor';
 import EditorContainer from '../layout/EditorContainer';
+import useMediaQuery from '@lib/hooks/useMediaQuery';
 
 interface Props {
     value: string;
@@ -11,13 +12,18 @@ interface Props {
 const NoteDescription: React.FC<Props> = ({ value }) => {
     const [editorHeight, setEditorHeight] = React.useState('');
     const rootRef = React.useRef() as any;
+    const { isMobile } = useMediaQuery();
 
     // TODO: Make hook
     React.useEffect(() => {
+        const offset = isMobile ? 88 : 32;
         function changeEditorHeight(): void {
             setTimeout((): void => {
                 setEditorHeight(
-                    `${rootRef?.current?.getBoundingClientRect().height - 32}px`
+                    `${
+                        rootRef?.current?.getBoundingClientRect().height -
+                        offset
+                    }px`
                 );
             }, 0);
         }
@@ -27,7 +33,7 @@ const NoteDescription: React.FC<Props> = ({ value }) => {
         window.addEventListener('resize', changeEditorHeight);
 
         return () => window.removeEventListener('resize', changeEditorHeight);
-    }, []);
+    }, [isMobile]);
 
     return (
         <Box
