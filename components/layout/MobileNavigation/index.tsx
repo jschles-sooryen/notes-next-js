@@ -19,7 +19,8 @@ const MobileNavigation: React.FC = () => {
     const [open, setOpen] = React.useState(false);
     const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] =
         React.useState(false);
-    const showBreadcrumbs = !!router.query.noteId;
+    const showBreadcrumbs =
+        !!router.query.noteId || router.pathname === '/create-note';
 
     const onDeleteFolderConfirm = () => {
         dispatch(deleteFolderInit(router.query.folderId as string));
