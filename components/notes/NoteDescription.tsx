@@ -12,11 +12,11 @@ interface Props {
 const NoteDescription: React.FC<Props> = ({ value }) => {
     const [editorHeight, setEditorHeight] = React.useState('');
     const rootRef = React.useRef() as any;
-    const { isMobile } = useMediaQuery();
+    const { isDesktop } = useMediaQuery();
 
     // TODO: Make hook
     React.useEffect(() => {
-        const offset = isMobile ? 88 : 32;
+        const offset = !isDesktop ? 88 : 32;
         function changeEditorHeight(): void {
             setTimeout((): void => {
                 setEditorHeight(
@@ -33,7 +33,7 @@ const NoteDescription: React.FC<Props> = ({ value }) => {
         window.addEventListener('resize', changeEditorHeight);
 
         return () => window.removeEventListener('resize', changeEditorHeight);
-    }, [isMobile]);
+    }, [isDesktop]);
 
     return (
         <Box

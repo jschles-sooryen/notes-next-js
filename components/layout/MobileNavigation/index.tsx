@@ -22,7 +22,10 @@ const MobileNavigation: React.FC = () => {
         React.useState(false);
     const showBreadcrumbs =
         !!router.query.noteId || router.pathname === '/create-note';
-    const showSearch = !!router.query.folderId && !router.query.noteId;
+    const showSearch =
+        !!router.query.folderId &&
+        !router.query.noteId &&
+        router.pathname !== '/create-note';
 
     const onDeleteFolderConfirm = () => {
         dispatch(deleteFolderInit(router.query.folderId as string));
