@@ -17,7 +17,7 @@ interface Props {
 const Layout: React.FC<Props> = ({ children }) => {
     const router = useRouter();
     const user = useSelector(selectUser);
-    const { isMobile } = useMediaQuery();
+    const { isDesktop } = useMediaQuery();
 
     const isLoggedIn = !!user;
     const isNotePage =
@@ -25,7 +25,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         router.pathname === '/create-note';
 
     const isCenteredMobileLayout =
-        isMobile && ['/create-folder', '/signin'].includes(router.pathname);
+        !isDesktop && ['/create-folder', '/signin'].includes(router.pathname);
 
     return (
         <Box>
@@ -37,12 +37,12 @@ const Layout: React.FC<Props> = ({ children }) => {
                     content="initial-scale=1.0, width=device-width"
                 />
             </Head>
-            <Box>{isMobile && isLoggedIn ? <MobileNavigation /> : null}</Box>
+            <Box>{!isDesktop && isLoggedIn ? <MobileNavigation /> : null}</Box>
             <Box
                 sx={[
                     {
-                        height: isMobile ? 'calc(100vh - 56px)' : '100vh',
-                        display: isMobile ? 'block' : 'flex',
+                        height: !isDesktop ? 'calc(100vh - 56px)' : '100vh',
+                        display: !isDesktop ? 'block' : 'flex',
                         maxWidth: '100vw',
                         overflow: 'hidden',
                         position: 'relative',
@@ -56,7 +56,7 @@ const Layout: React.FC<Props> = ({ children }) => {
                         : {},
                 ]}
             >
-                {isLoggedIn && !isMobile ? (
+                {isLoggedIn && isDesktop ? (
                     <>
                         <Navigation />
                         {isNotePage && <NoteSelection />}
