@@ -17,7 +17,6 @@ const foldersSlice = createSlice({
             state.folders = action.payload;
             state.selected = state.selected || action.payload[0]._id;
         },
-        fetchFoldersFail() {},
         createFolderInit: {
             reducer: () => {},
             prepare: (name: { name: string }) => ({ payload: name }),
@@ -26,7 +25,6 @@ const foldersSlice = createSlice({
             state.folders = state.folders.concat(action.payload);
             state.selected = state.folders[state.folders.length - 1]._id;
         },
-        createFolderFail() {},
         updateFolderInit: {
             reducer: () => {},
             prepare: (folder: Folder) => ({ payload: folder }),
@@ -41,7 +39,6 @@ const foldersSlice = createSlice({
                 }
             );
         },
-        updateFolderFail() {},
         deleteFolderInit: {
             reducer: () => {},
             prepare: (id: string) => ({ payload: id }),
@@ -51,7 +48,6 @@ const foldersSlice = createSlice({
                 (folder) => folder._id !== action.payload
             );
         },
-        deleteFolderFail() {},
         setSelectedFolder(state, action) {
             state.selected = action.payload;
         },
@@ -76,16 +72,12 @@ const foldersSlice = createSlice({
 export const {
     fetchFoldersInit,
     fetchFoldersSuccess,
-    fetchFoldersFail,
     createFolderInit,
-    createFolderFail,
     createFolderSuccess,
     updateFolderInit,
     updateFolderSuccess,
-    updateFolderFail,
     deleteFolderInit,
     deleteFolderSuccess,
-    deleteFolderFail,
     setSelectedFolder,
     clearSelectedFolder,
     setUpdating,
