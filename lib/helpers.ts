@@ -41,7 +41,20 @@ export const findNote = (notes, noteId) => {
 };
 
 export const decodeHtml = (html) => {
+    if (typeof window === 'undefined') {
+        return '';
+    }
     const div = document.createElement('div');
     div.innerHTML = html;
     return div.textContent || div.innerText || '';
+};
+
+export const debounce = (func, timeout = 300) => {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, timeout);
+    };
 };

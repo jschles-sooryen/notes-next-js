@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import Head from 'next/head';
-import Header from './Header';
-import { selectUser } from '../../store/auth/selectors';
+import { selectUser } from '@store/auth/selectors';
+import Navigation from './Navigation';
+import NoteSelection from '../notes/NoteSelection';
+import Notification from './Notification';
+import MobileNavigation from './MobileNavigation';
+import useMediaQuery from '@lib/hooks/useMediaQuery';
 
 interface Props {
     children?: React.ReactNode;
@@ -13,41 +17,19 @@ interface Props {
 const Layout: React.FC<Props> = ({ children }) => {
     const router = useRouter();
     const user = useSelector(selectUser);
+    const { isDesktop } = useMediaQuery();
 
     const isLoggedIn = !!user;
-    const centeredLayoutRoutes = ['/create-folder'];
-    const isCentered =
-        !isLoggedIn || centeredLayoutRoutes.includes(router.pathname);
+    const isNotePage =
+        router.pathname.includes('/notes') ||
+        router.pathname === '/create-note';
 
-    const renderContent = () => {
-        const styles = {
-            paddingTop: 2,
-            paddingBottom: 2,
-            paddingLeft: 4,
-            paddingRight: 4,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-        };
-
-        return isCentered ? (
-            <Box sx={styles}>{children}</Box>
-        ) : (
-            <Box sx={styles}>
-                <Box sx={{ width: '100%', height: '100%' }}>{children}</Box>
-            </Box>
-        );
-    };
+    const isCenteredLayout =
+        (!isDesktop && ['/create-folder'].includes(router.pathname)) ||
+        ['/signin'].includes(router.pathname);
 
     return (
-        <Box
-            sx={{
-                height: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
+        <Box>
             <Head>
                 <title>Next Notes</title>
                 <meta charSet="utf-8" />
@@ -56,8 +38,37 @@ const Layout: React.FC<Props> = ({ children }) => {
                     content="initial-scale=1.0, width=device-width"
                 />
             </Head>
-            <Header isLoggedIn={isLoggedIn} />
-            {renderContent()}
+            <Box>{!isDesktop && isLoggedIn ? <MobileNavigation /> : null}</Box>
+            <Box
+                sx={[
+                    {
+                        height: !isDesktop ? 'calc(100vh - 56px)' : '100vh',
+                        display: !isDesktop ? 'block' : 'flex',
+                        maxWidth: !isDesktop ? '100vw' : '1440px',
+                        margin: '0 auto',
+                        overflow: 'hidden',
+                        position: 'relative',
+                    },
+                    isCenteredLayout
+                        ? {
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                          }
+                        : {},
+                ]}
+            >
+                {isLoggedIn && isDesktop ? (
+                    <>
+                        <Navigation />
+                        {isNotePage && <NoteSelection />}
+                        {children}
+                    </>
+                ) : (
+                    <>{children}</>
+                )}
+                <Notification />
+            </Box>
         </Box>
     );
 };

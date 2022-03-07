@@ -1,14 +1,10 @@
 import * as Effects from 'redux-saga/effects';
 import {
     fetchFoldersSuccess,
-    fetchFoldersFail,
     createFolderSuccess,
-    createFolderFail,
     updateFolderSuccess,
-    updateFolderFail,
-    setSelectedFolder,
     deleteFolderSuccess,
-    deleteFolderFail,
+    setUpdating,
 } from './reducer';
 import { toggleLoading } from '../loading/reducer';
 import { setRedirect } from '../history/reducer';
@@ -25,7 +21,12 @@ export function* fetchFoldersSaga() {
         yield put(toggleLoading());
     } catch (e) {
         yield put(toggleLoading());
-        yield put(fetchFoldersFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error fetching folders: ${e.message}`,
+            })
+        );
     }
 }
 
@@ -47,7 +48,12 @@ export function* createFolderSaga(action) {
         yield put(setRedirect('/folders'));
     } catch (e) {
         yield put(toggleLoading());
-        yield put(createFolderFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error creating folder: ${e.message}`,
+            })
+        );
     }
 }
 
@@ -66,9 +72,9 @@ export function* updateFolderSaga(action) {
             },
         });
         const data = yield response.json();
-        yield put(updateFolderSuccess({ name: data.data.name }));
+        yield put(updateFolderSuccess({ name: data.data.name, _id }));
         yield put(toggleLoading());
-        yield put(setSelectedFolder(data.data.name));
+        yield put(setUpdating(''));
         yield put(
             setAlert({
                 type: 'success',
@@ -77,7 +83,12 @@ export function* updateFolderSaga(action) {
         );
     } catch (e) {
         yield put(toggleLoading());
-        yield put(updateFolderFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error updating folder: ${e.message}`,
+            })
+        );
     }
 }
 
@@ -91,7 +102,6 @@ export function* deleteFolderSaga(action) {
                 'Content-Type': 'application/json',
             },
         });
-        const data = yield response.json();
         yield put(deleteFolderSuccess(action.payload));
         yield put(
             setAlert({
@@ -99,9 +109,18 @@ export function* deleteFolderSaga(action) {
                 message: 'Folder Successfully Deleted!',
             })
         );
-        yield put(setRedirect('/folders'));
+        if (window.location.href.includes(id)) {
+            yield put(setRedirect('/folders'));
+        } else {
+            yield put(toggleLoading());
+        }
     } catch (e) {
         yield put(toggleLoading());
-        yield put(deleteFolderFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error deleting folder: ${e.message}`,
+            })
+        );
     }
 }

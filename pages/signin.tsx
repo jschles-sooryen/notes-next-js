@@ -1,10 +1,10 @@
 import { Box } from '@mui/system';
 import { NextPage } from 'next';
 import { getSession, signIn } from 'next-auth/react';
-import Card from '../components/ui/Card';
-import { wrapper } from '../store';
-import { setUser } from '../store/auth/reducer';
-import BasicButton from '../components/ui/BasicButton';
+import Card from '@components/ui/Card';
+import { wrapper } from '@store/index';
+import { setUser } from '@store/auth/reducer';
+import Button from '@components/ui/Button';
 
 export const getServerSideProps = wrapper.getServerSideProps(
     (store) =>
@@ -50,7 +50,7 @@ const SignInPage: NextPage = (props) => {
             >
                 Welcome! Please Sign In.
             </Box>
-            <BasicButton
+            <Button
                 onClick={handleSignIn}
                 sx={{
                     display: 'block',
@@ -61,7 +61,7 @@ const SignInPage: NextPage = (props) => {
                 }}
             >
                 Sign In w/ Google
-            </BasicButton>
+            </Button>
         </Card>
     );
 };

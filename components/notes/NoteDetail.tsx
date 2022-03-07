@@ -1,49 +1,29 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dynamic from 'next/dynamic';
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    styled,
-    TextField,
-    TextFieldProps,
-    Typography,
-} from '@mui/material';
-import Card from '../ui/Card';
-import { selectIsLoading } from '../../store/loading/selectors';
+import { Box, Typography } from '@mui/material';
+import { selectIsLoading } from '@store/loading/selectors';
 import { Note } from '../../interfaces';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
-import { formatDate } from '../../lib/helpers';
-import NoteForm from '../form/NoteForm';
-import Skeleton from '../ui/Skeleton';
-import { deleteNoteInit, updateNoteInit } from '../../store/notes/reducer';
+import { formatDate } from '@lib/helpers';
+import useMediaQuery from '@lib/hooks/useMediaQuery';
+import Breadcrumbs from '@components/layout/Breadcrumbs';
+import LoadingIndicator from '@components/ui/LoadingIndicator';
+import Skeleton from '@components/ui/Skeleton';
+import Button from '@components/ui/Button';
+import OptionButton from '@components/ui/OptionButton';
+import DeleteConfirmationModal from '@components/ui/DeleteConfirmationModal';
+import { deleteNoteInit, updateNoteInit } from '@store/notes/reducer';
 
-// const NoteDescription = styled((props: TextFieldProps) => (
-//     <TextField {...props} multiline fullWidth disabled />
-// ))(({ theme }) => ({
-//     height: '100%',
-//     '& .MuiOutlinedInput-root': {
-//         height: '100%',
-//         display: 'block',
-//     },
-//     '& .Mui-disabled': {
-//         color: theme.palette.primary.main,
-//         WebkitTextFillColor: `${theme.palette.primary.main} !important`,
-//     },
-// }));
-
-const NoteEditor = dynamic(() => import('../form/NoteEditor'), {
+const NoteEditor = dynamic(() => import('@components/form/NoteEditor'), {
     ssr: false,
+    loading: () => <LoadingIndicator />,
 });
 
 const NoteDescription = dynamic(() => import('./NoteDescription'), {
     ssr: false,
+    loading: () => <LoadingIndicator />,
 });
 
 interface Props {
@@ -57,6 +37,7 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const isLoading = useSelector(selectIsLoading);
+    const { isDesktop } = useMediaQuery();
 
     const onUpdate = (data) => {
         const payload = { ...data, folderId, noteId };
@@ -75,110 +56,102 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
         setIsUpdating(false);
     }, [note]);
 
-    console.log('NoteEditor', NoteEditor);
-
-    return isUpdating ? (
-        <NoteEditor
-            name={note.name}
-            description={note.description}
-            onSubmit={onUpdate}
-            onCancel={() => setIsUpdating(false)}
-            isUpdating
-        />
-    ) : (
+    return (
         <>
-            <Card
+            <Box
                 sx={{
-                    height: '100%',
+                    paddingX: 2,
+                    backgroundColor: 'secondary.light',
+                    height: !isDesktop ? '100vh' : '100%',
+                    maxHeight: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'start',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Box>
-                        <Typography
-                            variant="h4"
+                {isUpdating ? (
+                    <NoteEditor
+                        name={note.name}
+                        description={note.description}
+                        onSubmit={onUpdate}
+                        onCancel={() => setIsUpdating(false)}
+                        isUpdating
+                    />
+                ) : (
+                    <>
+                        {isDesktop && <Breadcrumbs />}
+                        <Box
                             sx={{
-                                marginBottom: 1,
-                                marginTop: 0,
-                                lineHeight: 1,
+                                marginTop: 3,
+                                display: 'flex',
+                                alignItems: 'start',
+                                justifyContent: 'space-between',
                             }}
                         >
-                            <Skeleton>{note?.name}</Skeleton>
-                        </Typography>
-                        <Typography paragraph>
-                            <Skeleton>
-                                Last updated: {formatDate(note?.updatedAt)}
-                            </Skeleton>
-                        </Typography>
-                    </Box>
+                            <Box>
+                                <Typography
+                                    variant="h5"
+                                    sx={{
+                                        marginBottom: 1,
+                                        marginTop: 0,
+                                        lineHeight: 1,
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    <Skeleton width="250px">
+                                        {note?.name}
+                                    </Skeleton>
+                                </Typography>
+                                <Typography paragraph sx={{ marginBottom: 0 }}>
+                                    <Skeleton width="250px">
+                                        <Typography
+                                            component="span"
+                                            sx={{ color: 'primary.light' }}
+                                        >
+                                            Last updated:
+                                        </Typography>{' '}
+                                        {formatDate(note?.updatedAt)}
+                                    </Skeleton>
+                                </Typography>
+                            </Box>
+                        </Box>
 
-                    <Box>
-                        <Button
-                            variant="outlined"
-                            sx={{ marginRight: 2, textTransform: 'unset' }}
-                            onClick={() => setIsUpdating(true)}
-                            startIcon={<Edit />}
-                            disabled={isLoading}
+                        <Box
+                            sx={{
+                                marginTop: 1,
+                            }}
                         >
-                            Update Note
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            sx={{ textTransform: 'unset' }}
-                            color="error"
-                            onClick={() => setOpen(true)}
-                            startIcon={<Delete />}
-                            disabled={isLoading}
-                        >
-                            Delete Note
-                        </Button>
-                    </Box>
-                </Box>
+                            <Button
+                                color="bg.main"
+                                sx={{ marginRight: 2, fontSize: '12px' }}
+                                onClick={() => setIsUpdating(true)}
+                                startIcon={<Edit />}
+                                disabled={isLoading}
+                            >
+                                Update
+                            </Button>
+                            <OptionButton
+                                variant="warning"
+                                onClick={() => setOpen(true)}
+                                sx={{ fontSize: '12px' }}
+                                startIcon={<Delete />}
+                                disabled={isLoading}
+                            >
+                                Delete
+                            </OptionButton>
+                        </Box>
 
-                <NoteDescription value={note?.description} height={''} />
-            </Card>
+                        <NoteDescription value={note?.description} />
+                    </>
+                )}
+            </Box>
 
-            <Dialog
+            <DeleteConfirmationModal
                 open={open}
-                onClose={() => setOpen(false)}
-                aria-labelledby="delete-confirm-title"
-                aria-describedby="delete-confirm-description"
-            >
-                <DialogTitle id="delete-confirm-title">
-                    {'Delete Note?'}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="delete-confirm-description">
-                        Are you sure you want to delete "{note?.name}"?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        color="success"
-                        onClick={onDelete}
-                        disabled={isLoading}
-                    >
-                        Confirm
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={handleClose}
-                        autoFocus
-                        disabled={isLoading}
-                    >
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                type="Note"
+                onClose={handleClose}
+                name={note?.name}
+                onConfirm={onDelete}
+            />
         </>
     );
 };

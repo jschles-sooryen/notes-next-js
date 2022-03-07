@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Box, styled, BoxProps } from '@mui/material';
+import { Box } from '@mui/material';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '../../ckeditor5/build/ckeditor';
-import TextField from '@mui/material/TextField';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Cancel from '@mui/icons-material/Cancel';
 import { useForm, Controller } from 'react-hook-form';
-import Card from '../ui/Card';
-import BasicButton from '../ui/BasicButton';
-import EditorContainer from '../ui/EditorContainer';
+import useMediaQuery from '@lib/hooks/useMediaQuery';
+import TextInput from '../ui/TextInput';
+import Button from '../ui/Button';
+import EditorContainer from '../layout/EditorContainer';
 
 interface Props {
     onSubmit(data): void;
@@ -33,15 +33,16 @@ const NoteEditor: React.FC<Props> = ({
             description: description || '',
         },
     });
+    const { isDesktop, isMobile } = useMediaQuery();
 
     React.useEffect(() => {
+        const offset = !isDesktop ? 185 : 109;
         function changeEditorHeight(): void {
             setTimeout((): void => {
                 setEditorHeight(
                     `${
                         rootRef?.current?.getBoundingClientRect().height -
-                        32 -
-                        61
+                        offset
                     }px`
                 );
             }, 0);
@@ -52,40 +53,52 @@ const NoteEditor: React.FC<Props> = ({
         window.addEventListener('resize', changeEditorHeight);
 
         return () => window.removeEventListener('resize', changeEditorHeight);
-    }, []);
+    }, [isDesktop]);
 
     return (
-        <Card
+        <Box
             sx={{
+                paddingY: 2,
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'start',
+                maxWidth: {
+                    lg: '100%',
+                    md: '45vw',
+                    sm: 'auto',
+                },
             }}
             ref={rootRef}
         >
             <Box
                 sx={{
                     display: 'flex',
-                    alignItems: 'start',
+                    alignItems: isMobile ? 'center' : 'start',
                     justifyContent: 'space-between',
                 }}
             >
-                <Box sx={{ width: '50%' }}>
+                <Box
+                    sx={
+                        isMobile
+                            ? { flex: 1, paddingRight: 2 }
+                            : { width: '50%' }
+                    }
+                >
                     <Controller
                         name="name"
                         control={control}
                         render={({ field: { onChange, value, name, ref } }) => (
-                            <TextField
+                            <TextInput
+                                variant="gray"
                                 fullWidth
                                 required
                                 name={name}
                                 value={value}
                                 onChange={onChange}
                                 inputRef={ref}
-                                label="Note Title"
+                                placeholder="Note Title"
                                 error={!!formState?.errors?.name}
-                                helperText={formState?.errors?.name?.message}
                             />
                         )}
                         rules={{ required: 'Note Title is required.' }}
@@ -93,34 +106,49 @@ const NoteEditor: React.FC<Props> = ({
                 </Box>
 
                 <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
+                    sx={[
+                        {
+                            display: 'flex',
+                            alignItems: 'center',
+                        },
+                        isMobile && {
+                            flexDirection: 'column-reverse',
+                        },
+                    ]}
                 >
                     {isUpdating ? (
-                        <BasicButton
+                        <Button
+                            color="bg.main"
                             onClick={onCancel}
                             startIcon={<Cancel />}
-                            sx={{
-                                paddingY: '16.5px',
-                                paddingX: 3,
-                                marginRight: 2,
-                            }}
+                            sx={
+                                !isMobile && {
+                                    paddingY: '16.5px',
+                                    paddingX: 3,
+                                    marginRight: 2,
+                                }
+                            }
                         >
                             Cancel
-                        </BasicButton>
+                        </Button>
                     ) : null}
-                    <BasicButton
+                    <Button
+                        color="bg.main"
                         onClick={handleSubmit(onSubmit)}
                         startIcon={<ArrowUpward />}
-                        sx={{
-                            paddingY: '16.5px',
-                            paddingX: 3,
-                        }}
+                        sx={
+                            !isMobile
+                                ? {
+                                      paddingY: '16.5px',
+                                      paddingX: 3,
+                                  }
+                                : {
+                                      marginBottom: 1,
+                                  }
+                        }
                     >
                         Submit
-                    </BasicButton>
+                    </Button>
                 </Box>
             </Box>
 
@@ -128,10 +156,6 @@ const NoteEditor: React.FC<Props> = ({
                 <CKEditor
                     editor={ClassicEditor}
                     data={description || '<p>Note Description *</p>'}
-                    onReady={(editor) => {
-                        // You can store the "editor" and use when it is needed.
-                        console.log('Editor is ready to use!', editor);
-                    }}
                     onChange={(_, editor) => {
                         const data = editor.getData();
                         setValue('description', data);
@@ -143,7 +167,7 @@ const NoteEditor: React.FC<Props> = ({
                     }}
                 />
             </EditorContainer>
-        </Card>
+        </Box>
     );
 };
 

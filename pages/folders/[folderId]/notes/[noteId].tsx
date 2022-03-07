@@ -4,11 +4,11 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { serverSideAuthentication } from '../../../../lib/auth';
-import { selectNotes } from '../../../../store/notes/selectors';
+import { selectNotes } from '@store/notes/selectors';
 import { findNote } from '../../../../lib/helpers';
-import NoteDetail from '../../../../components/notes/NoteDetail';
-import { selectRedirect } from '../../../../store/history/selectors';
-import { clearRedirect } from '../../../../store/history/reducer';
+import NoteDetail from '@components/notes/NoteDetail';
+import { selectRedirect } from '@store/history/selectors';
+import { clearRedirect } from '@store/history/reducer';
 
 export const getServerSideProps = serverSideAuthentication();
 
@@ -37,15 +37,7 @@ const NoteDetailPage: NextPage = () => {
     // TODO: redirect if notes are present and note not found
 
     return (
-        <Box
-            sx={{
-                maxWidth: '80%',
-                margin: '0 auto',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
+        <Box sx={{ flex: 1 }}>
             <NoteDetail note={note} folderId={folderId} noteId={noteId} />
         </Box>
     );
