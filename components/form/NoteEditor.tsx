@@ -63,6 +63,11 @@ const NoteEditor: React.FC<Props> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'start',
+                maxWidth: {
+                    lg: '100%',
+                    md: '45vw',
+                    sm: 'auto',
+                },
             }}
             ref={rootRef}
         >

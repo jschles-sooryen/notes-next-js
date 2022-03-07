@@ -24,8 +24,9 @@ const Layout: React.FC<Props> = ({ children }) => {
         router.pathname.includes('/notes') ||
         router.pathname === '/create-note';
 
-    const isCenteredMobileLayout =
-        !isDesktop && ['/create-folder', '/signin'].includes(router.pathname);
+    const isCenteredLayout =
+        (!isDesktop && ['/create-folder'].includes(router.pathname)) ||
+        ['/signin'].includes(router.pathname);
 
     return (
         <Box>
@@ -43,11 +44,12 @@ const Layout: React.FC<Props> = ({ children }) => {
                     {
                         height: !isDesktop ? 'calc(100vh - 56px)' : '100vh',
                         display: !isDesktop ? 'block' : 'flex',
-                        maxWidth: '100vw',
+                        maxWidth: !isDesktop ? '100vw' : '1440px',
+                        margin: '0 auto',
                         overflow: 'hidden',
                         position: 'relative',
                     },
-                    isCenteredMobileLayout
+                    isCenteredLayout
                         ? {
                               display: 'flex',
                               alignItems: 'center',

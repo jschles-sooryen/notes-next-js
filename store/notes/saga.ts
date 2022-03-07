@@ -1,13 +1,9 @@
 import * as Effects from 'redux-saga/effects';
 import {
     fetchNotesSuccess,
-    fetchNotesFail,
     createNoteSuccess,
-    createNoteFail,
     updateNoteSuccess,
-    updateNoteFail,
     deleteNoteSuccess,
-    deleteNoteFail,
 } from './reducer';
 import { toggleLoading } from '../loading/reducer';
 import { setSelectedFolder } from '../folders/reducer';
@@ -27,7 +23,12 @@ export function* fetchNotesSaga(action) {
         yield put(toggleLoading());
     } catch (e) {
         yield put(toggleLoading());
-        yield put(fetchNotesFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error fetching notes: ${e.message}`,
+            })
+        );
     }
 }
 
@@ -59,7 +60,12 @@ export function* createNoteSaga(action) {
         yield put(setRedirect(`/folders/${folderId}/notes`));
     } catch (e) {
         yield put(toggleLoading());
-        yield put(createNoteFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error creating note: ${e.message}`,
+            })
+        );
     }
 }
 
@@ -92,32 +98,48 @@ export function* updateNoteSaga(action) {
         yield put(toggleLoading());
     } catch (e) {
         yield put(toggleLoading());
-        yield put(updateNoteFail());
+        yield put(
+            setAlert({
+                type: 'error',
+                message: `Error updating note: ${e.message}`,
+            })
+        );
     }
 }
 
 export function* deleteNoteSaga(action) {
     const { noteId, folderId } = action.payload;
-
     yield put(toggleLoading());
     try {
-        yield fetch(`/api/folders/${folderId}/notes/${noteId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        yield put(deleteNoteSuccess(noteId));
+        const response = yield fetch(
+            `/api/folders/${folderId}/notes/${noteId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if (response.ok) {
+            yield put(deleteNoteSuccess(noteId));
+            yield put(toggleLoading());
+            yield put(
+                setAlert({
+                    type: 'success',
+                    message: 'Note Successfully Deleted!',
+                })
+            );
+            yield put(setRedirect(`/folders/${folderId}/notes`));
+        } else {
+            throw new Error(response.statusText);
+        }
+    } catch (e) {
         yield put(toggleLoading());
         yield put(
             setAlert({
-                type: 'success',
-                message: 'Note Successfully Deleted!',
+                type: 'error',
+                message: `Error deleting note: ${e.message}`,
             })
         );
-        yield put(setRedirect(`/folders/${folderId}/notes`));
-    } catch (e) {
-        yield put(toggleLoading());
-        yield put(deleteNoteFail());
     }
 }
