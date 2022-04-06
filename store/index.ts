@@ -54,5 +54,5 @@ export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
 
 export const wrapper = createWrapper<AppStore>(makeStore, {
-    debug: isDevelopment,
+    debug: false,
 });
