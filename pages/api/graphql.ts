@@ -1,6 +1,7 @@
 import { ApolloServer, gql } from 'apollo-server-micro';
 import { getSession } from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { GraphQLDateTime } from 'graphql-iso-date';
 import mongoose from 'mongoose';
 import connectToDatabase from '@lib/server/connectToDatabase';
 
@@ -21,8 +22,9 @@ const handleAuthError = () => ({
     message: 'Unauthenticated',
 });
 
-// Timestamps?
 const typeDefs = gql`
+    scalar ISODate
+
     type Query {
         getFolders(email: String!): GetFoldersResponse!
     }
@@ -50,6 +52,8 @@ const typeDefs = gql`
         name: String!
         user: ID!
         notes: [Note]!
+        createdAt: ISODate
+        updatedAt: ISODate
     }
 
     type Note {
@@ -57,6 +61,8 @@ const typeDefs = gql`
         name: String!
         description: String!
         folder: ID!
+        createdAt: ISODate
+        updatedAt: ISODate
     }
 
     type GetFoldersResponse {
@@ -240,6 +246,7 @@ const resolvers = {
             return notes;
         },
     },
+    ISODate: GraphQLDateTime,
 };
 
 export default async function handler(
