@@ -38,7 +38,7 @@ const MobileNavigation: React.FC = () => {
         const id = router.query.folderId as string;
         const mutation = DELETE_FOLDER_MUTATION(id, email);
         const response = await fetcher(mutation);
-        if (response.deleteFolder.success) {
+        if (response?.deleteFolder?.success) {
             setIsDeleteFolderModalOpen(false);
 
             revalidate();
@@ -53,6 +53,8 @@ const MobileNavigation: React.FC = () => {
             if (window.location.href.includes(id)) {
                 router.push('/folders');
             }
+        } else {
+            // TODO: handle error
         }
     };
 
