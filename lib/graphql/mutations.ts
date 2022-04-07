@@ -117,3 +117,20 @@ export const UPDATE_NOTE_MUTATION = (
   `,
     variables: { noteId, folderId, name, description, email },
 });
+
+export const DELETE_NOTE_MUTATION = (
+    noteId: string,
+    folderId: string,
+    email: string
+) => ({
+    query: `
+    mutation DeleteNote($noteId: ID!, $folderId: ID!, $email: String!) {
+      deleteNote(noteId: $noteId, folderId: $folderId, email: $email) {
+        code
+        success
+        message
+      }
+    }
+  `,
+    variables: { noteId, folderId, email },
+});

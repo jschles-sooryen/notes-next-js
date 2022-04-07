@@ -16,9 +16,13 @@ import DeleteConfirmationModal from '@components/ui/DeleteConfirmationModal';
 import { deleteNoteInit } from '@store/notes/reducer';
 import { useFolders } from '@lib/graphql/hooks';
 import fetcher from '@lib/graphql/fetcher';
-import { UPDATE_NOTE_MUTATION } from '@lib/graphql/mutations';
+import {
+    UPDATE_NOTE_MUTATION,
+    DELETE_NOTE_MUTATION,
+} from '@lib/graphql/mutations';
 import useEmail from '@lib/hooks/useEmail';
 import { setAlert } from '@store/alert/reducer';
+import { useRouter } from 'next/router';
 
 const NoteEditor = dynamic(() => import('@components/form/NoteEditor'), {
     ssr: false,
@@ -38,6 +42,7 @@ interface Props {
 
 const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const { email } = useEmail();
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [open, setOpen] = React.useState(false);
@@ -54,7 +59,7 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
             email
         );
         const response = await fetcher(mutation);
-        if (response.updateNote.success) {
+        if (response?.updateNote?.success) {
             dispatch(
                 setAlert({
                     type: 'success',
@@ -64,11 +69,29 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
             setIsUpdating(false);
             // TODO: Handle loading state
             revalidate();
+        } else {
+            // TODO: handle error
         }
     };
 
-    const onDelete = () => {
-        dispatch(deleteNoteInit({ folderId, noteId }));
+    const onDelete = async () => {
+        // dispatch(deleteNoteInit({ folderId, noteId }));
+        const mutation = DELETE_NOTE_MUTATION(noteId, folderId, email);
+        const response = await fetcher(mutation);
+        if (response?.deleteNote?.success) {
+            dispatch(
+                setAlert({
+                    type: 'success',
+                    message: 'Note Successfully Deleted!',
+                })
+            );
+
+            revalidate();
+
+            router.push(`/folders/${folderId}/notes`);
+        } else {
+            // TODO: handle error
+        }
     };
 
     const handleClose = () => {
