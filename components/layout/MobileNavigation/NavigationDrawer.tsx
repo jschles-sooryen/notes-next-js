@@ -18,7 +18,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Link from '@components/ui/Link';
 import AddButton from '@components/ui/AddButton';
 import { resetFolders, setUpdating } from '@store/folders/reducer';
-import { selectSelectedFolder } from '@store/folders/selectors';
 import { resetNotes } from '@store/notes/reducer';
 
 interface Props {
@@ -33,13 +32,11 @@ const NavigationDrawer: React.FC<Props> = ({
     onDeleteFolderClick,
 }) => {
     const dispatch = useDispatch();
-    const selectedFolder = useSelector(selectSelectedFolder);
     const router = useRouter();
     const folderId = router.query.folderId;
     const noteId = router.query.noteId;
 
     const showFolderOptions = folderId && !noteId;
-    const showNoteOptions = folderId && noteId;
 
     const handleSignOut = async () => {
         dispatch(resetFolders());
