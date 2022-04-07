@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import connectToDatabase from '@lib/server/connectToDatabase';
 
 const getUser = async (db, email) => {
-    const user = await db.collection('users').findOne({ email: email });
+    const user = await db.User.findOne({ email });
     return user;
 };
 
@@ -23,8 +23,6 @@ const handleAuthError = () => ({
 });
 
 const typeDefs = gql`
-    scalar ISODate
-
     type Query {
         getFolders(email: String!): GetFoldersResponse!
     }
@@ -52,8 +50,8 @@ const typeDefs = gql`
         name: String!
         user: ID!
         notes: [Note]!
-        createdAt: ISODate
-        updatedAt: ISODate
+        createdAt: String
+        updatedAt: String
     }
 
     type Note {
@@ -61,8 +59,8 @@ const typeDefs = gql`
         name: String!
         description: String!
         folder: ID!
-        createdAt: ISODate
-        updatedAt: ISODate
+        createdAt: String
+        updatedAt: String
     }
 
     type GetFoldersResponse {
@@ -102,10 +100,9 @@ const resolvers = {
                 const user = await getUser(db, args.email);
 
                 try {
-                    const folders = await db
-                        .collection('folders')
-                        .find({ user: user._id })
-                        .toArray();
+                    const folders = await await db.Folder.find({
+                        user: user._id,
+                    });
 
                     response = {
                         code: 200,
@@ -114,6 +111,7 @@ const resolvers = {
                         folders,
                     };
                 } catch (e) {
+                    console.log('query error', e);
                     response = {
                         ...handleGraphQLError(e),
                         folders: [],
@@ -137,10 +135,11 @@ const resolvers = {
                 const user = await getUser(db, session.user.email);
 
                 try {
-                    const result = await db.collection('folders').insertOne({
+                    const result = await new db.Folder({
                         name: args.name,
                         user: user._id,
                     });
+                    await result.save();
                     response = {
                         code: 200,
                         success: true,
@@ -148,7 +147,6 @@ const resolvers = {
                         folder: result,
                     };
                 } catch (e) {
-                    console.log('*e*', e);
                     response = {
                         ...handleGraphQLError(e),
                         folder: null,
@@ -172,21 +170,16 @@ const resolvers = {
                 const data = { name };
 
                 try {
-                    const result = await db
-                        .collection('folders')
-                        .findOneAndUpdate(
-                            {
-                                _id: new mongoose.Types.ObjectId(id),
-                                user: user._id,
-                            },
-                            { $set: { name: data.name } },
-                            { returnNewDocument: true }
-                        );
+                    const result = await db.Folder.findOneAndUpdate(
+                        { _id: id, user: user._id },
+                        data,
+                        { new: true }
+                    );
                     response = {
                         code: 200,
                         success: true,
                         message: 'Successfully updated folder',
-                        folder: result.value,
+                        folder: result,
                     };
                 } catch (e) {
                     response = {
@@ -211,12 +204,13 @@ const resolvers = {
                 const user = await getUser(db, session.user.email);
 
                 try {
-                    const result = await db
-                        .collection('folders')
-                        .findOneAndDelete({
-                            _id: new mongoose.Types.ObjectId(id),
+                    const result = await db.Folder.findOneAndDelete(
+                        {
+                            _id: id,
                             user: user._id,
-                        });
+                        },
+                        { rawResult: true }
+                    );
 
                     if (result.ok) {
                         response = {
@@ -243,14 +237,10 @@ const resolvers = {
     },
     Folder: {
         notes: async (obj, _, { db }) => {
-            const notes = await db
-                .collection('notes')
-                .find({ folder: obj._id })
-                .toArray();
+            const notes = await db.Note.find({ folder: obj._id });
             return notes;
         },
     },
-    ISODate: GraphQLDateTime,
 };
 
 export default async function handler(
@@ -288,7 +278,7 @@ export default async function handler(
             path: '/api/graphql',
         })(req, res);
 
-        await db.close();
+        await db.connection.close();
     } else {
         res.status(401).json({ message: 'Unauthenticated' });
     }
