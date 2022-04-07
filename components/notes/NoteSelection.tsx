@@ -16,12 +16,13 @@ import { fetchNotesInit } from '@store/notes/reducer';
 import { selectIsLoading } from '@store/loading/selectors';
 import { decodeHtml } from '@lib/helpers';
 import useMediaQuery from '@lib/hooks/useMediaQuery';
+import { useFolders } from '@lib/graphql/hooks';
 
 const NoteSelection: React.FC = () => {
     const dispatch = useDispatch();
-    const selectedFolder = useSelector(selectSelectedFolder);
+    const { selectedFolder } = useFolders();
     const isUpdatingFolder = useSelector(selectUpdatingFolder);
-    const notes = useSelector(selectNotes);
+    const notes = selectedFolder?.notes || [];
     const searchQuery = useSelector(selectNotesSearchQuery);
     const isLoading = useSelector(selectIsLoading);
     const router = useRouter();
@@ -29,20 +30,12 @@ const NoteSelection: React.FC = () => {
 
     const folderId = router.query.folderId as string;
 
-    // const selectedNotes = notes.filter((note) => {
-    //     return (
-    //         note.name.toLowerCase().includes(searchQuery) ||
-    //         decodeHtml(note.description).toLowerCase().includes(searchQuery)
-    //     );
-    // });
-
-    const selectedNotes = [];
-
-    // React.useEffect(() => {
-    //     if (folderId) {
-    //         dispatch(fetchNotesInit(folderId));
-    //     }
-    // }, [folderId]);
+    const selectedNotes = notes.filter((note) => {
+        return (
+            note.name.toLowerCase().includes(searchQuery) ||
+            decodeHtml(note.description).toLowerCase().includes(searchQuery)
+        );
+    });
 
     return (
         <SelectionContainer>
@@ -57,7 +50,7 @@ const NoteSelection: React.FC = () => {
                         marginBottom: !isDesktop ? '27px' : 2,
                     }}
                 >
-                    {selectedFolder}
+                    {selectedFolder?.name}
                 </Box>
             )}
 

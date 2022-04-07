@@ -60,3 +60,24 @@ export const DELETE_FOLDER_MUTATION = (id, email) => ({
     `,
     variables: { id, email },
 });
+
+export const CREATE_NOTE_MUTATION = (folderId, name, description, email) => ({
+    query: `
+      mutation CreateNote($folderId: ID!, $name: String!, $description: String!, $email: String!) {
+        createNote(folderId: $folderId, name: $name, description: $description, email: $email) {
+          code
+          success
+          message
+          note {
+            _id
+            name
+            description
+            folder
+            createdAt
+            updatedAt
+          }
+        }
+      }
+    `,
+    variables: { folderId, name, description, email },
+});

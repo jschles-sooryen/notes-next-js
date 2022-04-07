@@ -1,9 +1,9 @@
 import { ApolloServer, gql } from 'apollo-server-micro';
 import { getSession } from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { GraphQLDateTime } from 'graphql-iso-date';
 import mongoose from 'mongoose';
 import connectToDatabase from '@lib/server/connectToDatabase';
+import sanitize from '@lib/server/sanitize';
 
 const getUser = async (db, email) => {
     const user = await db.User.findOne({ email });
@@ -35,6 +35,12 @@ const typeDefs = gql`
             email: String!
         ): UpdateFolderResponse!
         deleteFolder(id: ID!, email: String!): DeleteFolderResponse!
+        createNote(
+            folderId: ID!
+            name: String!
+            description: String!
+            email: String!
+        ): CreateNoteResponse!
     }
 
     type User {
@@ -89,6 +95,13 @@ const typeDefs = gql`
         success: Boolean!
         message: String!
     }
+
+    type CreateNoteResponse {
+        code: Int!
+        success: Boolean!
+        message: String!
+        note: Note
+    }
 `;
 
 const resolvers = {
@@ -111,7 +124,6 @@ const resolvers = {
                         folders,
                     };
                 } catch (e) {
-                    console.log('query error', e);
                     response = {
                         ...handleGraphQLError(e),
                         folders: [],
@@ -227,6 +239,46 @@ const resolvers = {
                     }
                 } catch (e) {
                     response = handleGraphQLError(e);
+                }
+            } else {
+                response = handleAuthError();
+            }
+
+            return response;
+        },
+        createNote: async (_, args, { session, db }) => {
+            const { folderId, name, description, email } = args;
+            let response;
+
+            if (session.user.email === email) {
+                const user = await getUser(db, session.user.email);
+                const parentFolder = await db.Folder.findById(folderId);
+
+                if (
+                    !!parentFolder &&
+                    parentFolder.user.toString() === user._id.toString()
+                ) {
+                    const data = {
+                        name,
+                        description: sanitize(description),
+                        folder: folderId,
+                    };
+
+                    try {
+                        const result = await new db.Note(data);
+                        await result.save();
+
+                        response = {
+                            code: 200,
+                            success: true,
+                            message: 'Successfully created note',
+                            note: result,
+                        };
+                    } catch (e) {
+                        response = handleGraphQLError(e);
+                    }
+                } else {
+                    response = handleAuthError();
                 }
             } else {
                 response = handleAuthError();
