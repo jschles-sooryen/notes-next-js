@@ -29,7 +29,7 @@ const CreateNotePage: NextPage = () => {
 
     const onNoteSubmit = async (data) => {
         const { name, description } = data;
-        const folderId = router.query.folderId;
+        const folderId = router.query.folderId as string;
         const mutation = CREATE_NOTE_MUTATION(
             folderId,
             name,
