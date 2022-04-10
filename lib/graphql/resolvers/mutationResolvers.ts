@@ -5,12 +5,12 @@ const mutationResolvers = {
     createFolder: async (_, args, { session, db }) => {
         let response;
 
-        if (session.user.email === args.email) {
+        if (session.user.email === args.input.email) {
             const user = await getUser(db, session.user.email);
 
             try {
                 const result = await new db.Folder({
-                    name: args.name,
+                    name: args.input.name,
                     user: user._id,
                 });
                 await result.save();
@@ -36,7 +36,10 @@ const mutationResolvers = {
         return response;
     },
     updateFolder: async (_, args, { session, db }) => {
-        const { id, name, email } = args;
+        const {
+            id,
+            input: { name, email },
+        } = args;
         let response;
 
         if (session.user.email === email) {
@@ -109,7 +112,10 @@ const mutationResolvers = {
         return response;
     },
     createNote: async (_, args, { session, db }) => {
-        const { folderId, name, description, email } = args;
+        const {
+            folderId,
+            input: { name, description, email },
+        } = args;
         let response;
 
         if (session.user.email === email) {
@@ -149,7 +155,11 @@ const mutationResolvers = {
         return response;
     },
     updateNote: async (_, args, { session, db }) => {
-        const { noteId, folderId, name, description, email } = args;
+        const {
+            noteId,
+            folderId,
+            input: { name, description, email },
+        } = args;
         let response;
 
         if (session.user.email === email) {
