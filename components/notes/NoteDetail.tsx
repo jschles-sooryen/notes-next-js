@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@mui/material';
-import { selectIsLoading } from '@store/loading/selectors';
 import { Note } from '../../interfaces';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -14,7 +13,16 @@ import Skeleton from '@components/ui/Skeleton';
 import Button from '@components/ui/Button';
 import OptionButton from '@components/ui/OptionButton';
 import DeleteConfirmationModal from '@components/ui/DeleteConfirmationModal';
-import { deleteNoteInit, updateNoteInit } from '@store/notes/reducer';
+import { deleteNoteInit } from '@store/notes/reducer';
+import { useFolders } from '@lib/graphql/hooks';
+import fetcher from '@lib/graphql/fetcher';
+import {
+    UPDATE_NOTE_MUTATION,
+    DELETE_NOTE_MUTATION,
+} from '@lib/graphql/mutations';
+import useEmail from '@lib/hooks/useEmail';
+import { setAlert } from '@store/alert/reducer';
+import { useRouter } from 'next/router';
 
 const NoteEditor = dynamic(() => import('@components/form/NoteEditor'), {
     ssr: false,
@@ -34,18 +42,56 @@ interface Props {
 
 const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
+    const { email } = useEmail();
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [open, setOpen] = React.useState(false);
-    const isLoading = useSelector(selectIsLoading);
+    const { isLoading, revalidate } = useFolders();
     const { isDesktop } = useMediaQuery();
 
-    const onUpdate = (data) => {
-        const payload = { ...data, folderId, noteId };
-        dispatch(updateNoteInit(payload));
+    const onUpdate = async (data) => {
+        const { name, description } = data;
+        const mutation = UPDATE_NOTE_MUTATION(
+            noteId,
+            folderId,
+            name,
+            description,
+            email
+        );
+        const response = await fetcher(mutation);
+        if (response?.updateNote?.success) {
+            dispatch(
+                setAlert({
+                    type: 'success',
+                    message: 'Note Successfully Updated!',
+                })
+            );
+            setIsUpdating(false);
+            // TODO: Handle loading state
+            revalidate();
+        } else {
+            // TODO: handle error
+        }
     };
 
-    const onDelete = () => {
-        dispatch(deleteNoteInit({ folderId, noteId }));
+    const onDelete = async () => {
+        // dispatch(deleteNoteInit({ folderId, noteId }));
+        const mutation = DELETE_NOTE_MUTATION(noteId, folderId, email);
+        const response = await fetcher(mutation);
+        if (response?.deleteNote?.success) {
+            dispatch(
+                setAlert({
+                    type: 'success',
+                    message: 'Note Successfully Deleted!',
+                })
+            );
+
+            revalidate();
+
+            router.push(`/folders/${folderId}/notes`);
+        } else {
+            // TODO: handle error
+        }
     };
 
     const handleClose = () => {

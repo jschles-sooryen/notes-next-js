@@ -9,14 +9,18 @@ import DeleteConfirmationModal from '@components/ui/DeleteConfirmationModal';
 import NoteSearchInput from '@components/notes/NoteSearchInput';
 import MoreIcon from '@mui/icons-material/MoreHorizRounded';
 import { selectUser } from '@store/auth/selectors';
-import { selectSelectedFolder } from '@store/folders/selectors';
-import { deleteFolderInit } from '@store/folders/reducer';
+import { DELETE_FOLDER_MUTATION } from '@lib/graphql/mutations';
+import fetcher from '@lib/graphql/fetcher';
+import { useFolders } from '@lib/graphql/hooks';
+import useEmail from '@lib/hooks/useEmail';
+import { setAlert } from '@store/alert/reducer';
 
 const MobileNavigation: React.FC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const user = useSelector(selectUser);
-    const selectedFolder = useSelector(selectSelectedFolder);
+    const { email } = useEmail();
+    const { revalidate, selectedFolder } = useFolders();
     const [open, setOpen] = React.useState(false);
     const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] =
         React.useState(false);
@@ -27,9 +31,28 @@ const MobileNavigation: React.FC = () => {
         !router.query.noteId &&
         router.pathname !== '/create-note';
 
-    const onDeleteFolderConfirm = () => {
-        dispatch(deleteFolderInit(router.query.folderId as string));
-        setIsDeleteFolderModalOpen(false);
+    const onDeleteFolderConfirm = async () => {
+        const id = router.query.folderId as string;
+        const mutation = DELETE_FOLDER_MUTATION(id, email);
+        const response = await fetcher(mutation);
+        if (response?.deleteFolder?.success) {
+            setIsDeleteFolderModalOpen(false);
+
+            revalidate();
+
+            dispatch(
+                setAlert({
+                    type: 'success',
+                    message: 'Folder Successfully Deleted!',
+                })
+            );
+
+            if (window.location.href.includes(id)) {
+                router.push('/folders');
+            }
+        } else {
+            // TODO: handle error
+        }
     };
 
     return (
@@ -72,7 +95,7 @@ const MobileNavigation: React.FC = () => {
             <DeleteConfirmationModal
                 type="Folder"
                 open={isDeleteFolderModalOpen}
-                name={selectedFolder}
+                name={selectedFolder?.name}
                 onConfirm={onDeleteFolderConfirm}
                 onClose={() => setIsDeleteFolderModalOpen(false)}
             />

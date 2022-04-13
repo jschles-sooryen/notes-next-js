@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 
 export const formatDate = (
-    date: Date | string | undefined,
+    date: Date | string | number | undefined,
     isDetail = false
 ): string => {
+    date = Number(date);
     const dateObj = date ? new Date(date) : new Date();
 
     if (isDetail) {
