@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@mui/material';
 import { Note } from '../../interfaces';
@@ -20,8 +19,8 @@ import {
     DELETE_NOTE_MUTATION,
 } from '@lib/graphql/mutations';
 import useLoggedInUser from '@lib/hooks/useLoggedInUser';
-import { setAlert } from '@store/alert/reducer';
 import { useRouter } from 'next/router';
+import { useStoreActions } from '@store/hooks';
 
 const NoteEditor = dynamic(() => import('@components/form/NoteEditor'), {
     ssr: false,
@@ -40,7 +39,7 @@ interface Props {
 }
 
 const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
-    const dispatch = useDispatch();
+    const setAlert = useStoreActions((actions) => actions.setAlert);
     const router = useRouter();
     const { email } = useLoggedInUser();
     const [isUpdating, setIsUpdating] = React.useState(false);
@@ -59,12 +58,10 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
         );
         const response = await fetcher(mutation);
         if (response?.updateNote?.success) {
-            dispatch(
-                setAlert({
-                    type: 'success',
-                    message: 'Note Successfully Updated!',
-                })
-            );
+            setAlert({
+                type: 'success',
+                message: 'Note Successfully Updated!',
+            });
             setIsUpdating(false);
             // TODO: Handle loading state
             revalidate();
@@ -74,16 +71,13 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
     };
 
     const onDelete = async () => {
-        // dispatch(deleteNoteInit({ folderId, noteId }));
         const mutation = DELETE_NOTE_MUTATION(noteId, folderId, email);
         const response = await fetcher(mutation);
         if (response?.deleteNote?.success) {
-            dispatch(
-                setAlert({
-                    type: 'success',
-                    message: 'Note Successfully Deleted!',
-                })
-            );
+            setAlert({
+                type: 'success',
+                message: 'Note Successfully Deleted!',
+            });
 
             revalidate();
 
