@@ -46,7 +46,10 @@ const MobileNavigation: React.FC = () => {
                 router.push('/folders');
             }
         } else {
-            // TODO: handle error
+            setAlert({
+                type: 'error',
+                message: `Error deleting folder: ${response?.deleteFolder?.message}`,
+            });
         }
     };
 
