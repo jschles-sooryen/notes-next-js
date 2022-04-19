@@ -1,32 +1,25 @@
 import { Box } from '@mui/system';
 import { NextPage } from 'next';
-import { getSession, signIn } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 import Card from '@components/ui/Card';
-import { wrapper } from '@store/index';
-import { setUser } from '@store/auth/reducer';
 import Button from '@components/ui/Button';
 
-export const getServerSideProps = wrapper.getServerSideProps(
-    (store) =>
-        async (ctx): Promise<any> => {
-            const session = await getSession({ req: ctx.req });
+export const getServerSideProps = async (ctx): Promise<any> => {
+    const session = await getSession({ req: ctx.req });
 
-            if (session) {
-                return {
-                    redirect: {
-                        destination: '/folders',
-                        permanent: false,
-                    },
-                };
-            } else {
-                store.dispatch(setUser(null));
-            }
+    if (session) {
+        return {
+            redirect: {
+                destination: '/folders',
+                permanent: false,
+            },
+        };
+    }
 
-            return {
-                props: {},
-            };
-        }
-);
+    return {
+        props: {},
+    };
+};
 
 const SignInPage: NextPage = (props) => {
     const handleSignIn = async () => {
