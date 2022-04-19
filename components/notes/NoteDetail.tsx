@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@mui/material';
 import { Note } from '../../interfaces';
@@ -13,16 +12,15 @@ import Skeleton from '@components/ui/Skeleton';
 import Button from '@components/ui/Button';
 import OptionButton from '@components/ui/OptionButton';
 import DeleteConfirmationModal from '@components/ui/DeleteConfirmationModal';
-import { deleteNoteInit } from '@store/notes/reducer';
 import { useFolders } from '@lib/graphql/hooks';
 import fetcher from '@lib/graphql/fetcher';
 import {
     UPDATE_NOTE_MUTATION,
     DELETE_NOTE_MUTATION,
 } from '@lib/graphql/mutations';
-import useEmail from '@lib/hooks/useEmail';
-import { setAlert } from '@store/alert/reducer';
+import useLoggedInUser from '@lib/hooks/useLoggedInUser';
 import { useRouter } from 'next/router';
+import { useStoreActions } from '@store/hooks';
 
 const NoteEditor = dynamic(() => import('@components/form/NoteEditor'), {
     ssr: false,
@@ -41,9 +39,9 @@ interface Props {
 }
 
 const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
-    const dispatch = useDispatch();
+    const setAlert = useStoreActions((actions) => actions.setAlert);
     const router = useRouter();
-    const { email } = useEmail();
+    const { email } = useLoggedInUser();
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const { isLoading, revalidate } = useFolders();
@@ -60,12 +58,10 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
         );
         const response = await fetcher(mutation);
         if (response?.updateNote?.success) {
-            dispatch(
-                setAlert({
-                    type: 'success',
-                    message: 'Note Successfully Updated!',
-                })
-            );
+            setAlert({
+                type: 'success',
+                message: 'Note Successfully Updated!',
+            });
             setIsUpdating(false);
             // TODO: Handle loading state
             revalidate();
@@ -75,16 +71,13 @@ const NoteDetail: React.FC<Props> = ({ note, folderId, noteId }) => {
     };
 
     const onDelete = async () => {
-        // dispatch(deleteNoteInit({ folderId, noteId }));
         const mutation = DELETE_NOTE_MUTATION(noteId, folderId, email);
         const response = await fetcher(mutation);
         if (response?.deleteNote?.success) {
-            dispatch(
-                setAlert({
-                    type: 'success',
-                    message: 'Note Successfully Deleted!',
-                })
-            );
+            setAlert({
+                type: 'success',
+                message: 'Note Successfully Deleted!',
+            });
 
             revalidate();
 

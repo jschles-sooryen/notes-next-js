@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Box, AppBar, Toolbar, IconButton } from '@mui/material';
 import NavigationDrawer from './NavigationDrawer';
@@ -8,18 +7,16 @@ import MobileBreadcrumbs from './MobileBreadcrumbs';
 import DeleteConfirmationModal from '@components/ui/DeleteConfirmationModal';
 import NoteSearchInput from '@components/notes/NoteSearchInput';
 import MoreIcon from '@mui/icons-material/MoreHorizRounded';
-import { selectUser } from '@store/auth/selectors';
 import { DELETE_FOLDER_MUTATION } from '@lib/graphql/mutations';
 import fetcher from '@lib/graphql/fetcher';
 import { useFolders } from '@lib/graphql/hooks';
-import useEmail from '@lib/hooks/useEmail';
-import { setAlert } from '@store/alert/reducer';
+import useLoggedInUser from '@lib/hooks/useLoggedInUser';
+import { useStoreActions } from '@store/hooks';
 
 const MobileNavigation: React.FC = () => {
-    const dispatch = useDispatch();
+    const setAlert = useStoreActions((actions) => actions.setAlert);
     const router = useRouter();
-    const user = useSelector(selectUser);
-    const { email } = useEmail();
+    const { email, user } = useLoggedInUser();
     const { revalidate, selectedFolder } = useFolders();
     const [open, setOpen] = React.useState(false);
     const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] =
@@ -40,12 +37,10 @@ const MobileNavigation: React.FC = () => {
 
             revalidate();
 
-            dispatch(
-                setAlert({
-                    type: 'success',
-                    message: 'Folder Successfully Deleted!',
-                })
-            );
+            setAlert({
+                type: 'success',
+                message: 'Folder Successfully Deleted!',
+            });
 
             if (window.location.href.includes(id)) {
                 router.push('/folders');

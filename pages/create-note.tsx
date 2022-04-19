@@ -1,27 +1,23 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { Box } from '@mui/material';
-import { serverSideAuthentication } from '../lib/auth';
 import LoadingIndicator from '@components/ui/LoadingIndicator';
 import { useFolders } from '@lib/graphql/hooks';
 import fetcher from '@lib/graphql/fetcher';
-import useEmail from '@lib/hooks/useEmail';
+import useLoggedInUser from '@lib/hooks/useLoggedInUser';
 import { CREATE_NOTE_MUTATION } from '@lib/graphql/mutations';
-import { setAlert } from '@store/alert/reducer';
+import { useStoreActions } from '@store/hooks';
 
 const NoteEditor = dynamic(() => import('@components/form/NoteEditor'), {
     ssr: false,
 });
 
-export const getServerSideProps = serverSideAuthentication();
-
 const CreateNotePage: NextPage = () => {
-    const dispatch = useDispatch();
+    const setAlert = useStoreActions((actions) => actions.setAlert);
     const router = useRouter();
-    const { email } = useEmail();
+    const { email } = useLoggedInUser();
     const { isLoading, selectedFolder, revalidate } = useFolders();
     const [selectedFolderId, _] = React.useState(
         (router.query.folderId as string) || ''
@@ -38,12 +34,11 @@ const CreateNotePage: NextPage = () => {
         );
         const response = await fetcher(mutation);
         if (response?.createNote?.success) {
-            dispatch(
-                setAlert({
-                    type: 'success',
-                    message: 'Note Successfully Created!',
-                })
-            );
+            setAlert({
+                type: 'success',
+                message: 'Note Successfully Created!',
+            });
+
             revalidate();
             router.push(`/folders/${folderId}/notes`);
         } else {

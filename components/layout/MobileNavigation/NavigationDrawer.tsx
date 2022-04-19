@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 import {
@@ -17,8 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from '@components/ui/Link';
 import AddButton from '@components/ui/AddButton';
-import { resetFolders, setUpdating } from '@store/folders/reducer';
-import { resetNotes } from '@store/notes/reducer';
+import { useStoreActions } from '@store/hooks';
 
 interface Props {
     open: boolean;
@@ -31,7 +29,9 @@ const NavigationDrawer: React.FC<Props> = ({
     onClose,
     onDeleteFolderClick,
 }) => {
-    const dispatch = useDispatch();
+    const setUpdatingFolder = useStoreActions(
+        (actions) => actions.setUpdatingFolder
+    );
     const router = useRouter();
     const folderId = router.query.folderId;
     const noteId = router.query.noteId;
@@ -39,15 +39,13 @@ const NavigationDrawer: React.FC<Props> = ({
     const showFolderOptions = folderId && !noteId;
 
     const handleSignOut = async () => {
-        dispatch(resetFolders());
-        dispatch(resetNotes());
         await signOut();
     };
 
     const handleUpdateFolderClick = () => {
         onClose();
         setTimeout(() => {
-            dispatch(setUpdating(folderId));
+            setUpdatingFolder(folderId as string);
         }, 0);
     };
 
