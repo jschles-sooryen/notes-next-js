@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Box } from '@mui/system';
 import Link from '../ui/Link';
 import Skeleton from '../ui/Skeleton';
-import { findNote } from '../../lib/helpers';
+import { findNote } from '@lib/helpers';
 import { useFolders } from '@lib/graphql/hooks';
 
 const BreadcrumbArrow: React.FC = () => <Box sx={{ marginX: 1 }}>{'>'}</Box>;
