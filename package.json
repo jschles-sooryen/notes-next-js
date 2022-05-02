@@ -4,7 +4,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "jest --verbose --watchAll --coverage --silent",
+    "test": "jest --verbose --watchAll --coverage",
     "type-check": "tsc"
   },
   "dependencies": {
