@@ -17,7 +17,9 @@
     "paths": {
       "@components/*": ["components/*"],
       "@store/*": ["store/*"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@pages/*": ["pages/*"],
+      "@/*": ["./*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "jest.config.js"],
