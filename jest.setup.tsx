@@ -18,11 +18,13 @@ import store from '@store/index';
 import theme from '@lib/theme';
 import { handlers } from '@lib/graphql/mocks/handlers';
 
+const testUser = { username: 'admin', email: 'admin@email.com' };
+
 jest.mock('next-auth/react', () => {
     const originalModule = jest.requireActual('next-auth/react');
     const mockSession = {
         expires: new Date(Date.now() + 2 * 86400).toISOString(),
-        user: { username: 'admin', email: 'admin@email.com' },
+        user: testUser,
     };
     return {
         __esModule: true,
@@ -72,6 +74,15 @@ jest.mock('@lib/graphql/hooks', () => ({
             revalidate: jest.fn(() => {}),
             error: null,
         };
+    }),
+}));
+
+jest.mock('@lib/hooks/useLoggedInUser', () => ({
+    __esModule: true,
+    default: () => ({
+        user: testUser,
+        email: testUser.email,
+        isLoading: false,
     }),
 }));
 
