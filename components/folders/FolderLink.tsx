@@ -31,8 +31,6 @@ const FolderButton: React.FC<Props> = ({ _id, name, isNav = false }) => {
     const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    console.log({ updatingFolder });
-
     const folderId = router.query.folderId as string;
     const isSelected = folderId && folderId === _id;
 
