@@ -64,6 +64,7 @@ const MobileNavigation: React.FC = () => {
                     boxShadow: 'none',
                     position: 'relative',
                 }}
+                data-testid="mobile-nav-container"
             >
                 <Toolbar sx={{ borderBottom: '2px solid #eee' }}>
                     {showBreadcrumbs ? (
