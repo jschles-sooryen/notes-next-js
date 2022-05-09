@@ -92,8 +92,8 @@ jest.mock('@lib/hooks/useLoggedInUser', () => ({
 
 const render = (
     ui: React.ReactElement,
-    renderOptions = {},
-    mockStore = store
+    mockStore = store,
+    renderOptions = {}
 ): RenderResult => {
     const Wrapper: React.FC = ({ children }) => (
         <ThemeProvider theme={theme}>
