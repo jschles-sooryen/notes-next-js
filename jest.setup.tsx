@@ -90,10 +90,14 @@ jest.mock('@lib/hooks/useLoggedInUser', () => ({
     }),
 }));
 
-const render = (ui: React.ReactElement, renderOptions = {}): RenderResult => {
+const render = (
+    ui: React.ReactElement,
+    renderOptions = {},
+    mockStore = store
+): RenderResult => {
     const Wrapper: React.FC = ({ children }) => (
         <ThemeProvider theme={theme}>
-            <StoreProvider store={store}>{children}</StoreProvider>
+            <StoreProvider store={mockStore}>{children}</StoreProvider>
         </ThemeProvider>
     );
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
