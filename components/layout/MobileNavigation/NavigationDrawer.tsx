@@ -45,6 +45,7 @@ const NavigationDrawer: React.FC<Props> = ({
     const handleUpdateFolderClick = () => {
         onClose();
         setTimeout(() => {
+            /* istanbul ignore next */
             setUpdatingFolder(folderId as string);
         }, 0);
     };
