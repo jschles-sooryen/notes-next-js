@@ -119,6 +119,7 @@ afterEach(() => {
 });
 
 afterAll(() => {
+    cleanup();
     server.close();
 });
 
