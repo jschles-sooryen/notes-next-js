@@ -50,6 +50,7 @@ const FolderButton: React.FC<Props> = ({ _id, name, isNav = false }) => {
         setIsOptionsOpen(false);
     };
 
+    /* istanbul ignore next */
     const onDeleteFolderConfirm = async () => {
         const mutation = DELETE_FOLDER_MUTATION(_id, email);
         const response = await fetcher(mutation);
@@ -136,6 +137,7 @@ const FolderButton: React.FC<Props> = ({ _id, name, isNav = false }) => {
                                 disableRipple
                                 onClick={handleIconClick}
                                 disabled={isUpdatingCurrentFolder}
+                                data-testid={`folder-options-${_id}`}
                             >
                                 <MoreIcon />
                             </IconButton>
