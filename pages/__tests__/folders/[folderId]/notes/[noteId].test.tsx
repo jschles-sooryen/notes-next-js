@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@/jest.setup';
-import NoteDetailPage from '@pages/folders/[folderId]/notes/[noteId]';
+import NoteDetailPage from '@pages/folders/[folderId]/notes/[noteId].page';
 import mockRouter from 'next-router-mock';
 import 'next-router-mock/dynamic-routes';
 
