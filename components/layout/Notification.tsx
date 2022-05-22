@@ -28,7 +28,10 @@ const Notification: React.FC = () => {
             >
                 <Fade in={!!alert.message} appear>
                     <Alert
-                        severity={(alert.type as AlertColor) || 'info'}
+                        severity={
+                            /* istanbul ignore next */
+                            (alert.type as AlertColor) || 'info'
+                        }
                         onClose={clearAlertDialog}
                     >
                         {alert.message}
