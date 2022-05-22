@@ -111,6 +111,7 @@ const server = setupServer(...handlers);
 beforeAll(() => {
     cleanup();
     server.listen();
+    jest.setTimeout(10000);
 });
 
 afterEach(() => {
