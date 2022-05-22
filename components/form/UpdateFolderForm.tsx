@@ -56,7 +56,6 @@ const UpdateFolderForm: React.FC<Props> = ({ name, id, isNav = false }) => {
     };
 
     const handleKeyDown = (e) => {
-        console.log('keycode', e.keyCode);
         if (e.keyCode === 13) {
             handleSubmit(onSubmit)();
         }
