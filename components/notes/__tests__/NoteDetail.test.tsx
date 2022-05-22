@@ -45,6 +45,8 @@ describe('<NoteDetail />', () => {
                 message: 'success',
             },
         }));
+
+        jest.setTimeout(10000);
     });
 
     afterEach(() => {
@@ -150,7 +152,6 @@ describe('<NoteDetail />', () => {
     });
 
     it('Opens delete folder confirmation modal upon clicking "Delete" button', async () => {
-        jest.setTimeout(10000);
         const spy = jest.spyOn(Mutations, 'DELETE_NOTE_MUTATION');
         render(
             <NoteDetail note={note} folderId={note.folder} noteId={note._id} />
