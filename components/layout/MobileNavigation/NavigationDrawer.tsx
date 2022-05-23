@@ -63,7 +63,7 @@ const NavigationDrawer: React.FC<Props> = ({
         <Drawer open={open} anchor="right" onClose={onClose}>
             <Box>
                 <List>
-                    <Link href="/folders" passHref>
+                    <Link href="/folders" passHref noLinkStyle>
                         <ListItem button component="a">
                             <ListItemIcon>
                                 <FolderIcon color="primary" />
@@ -74,7 +74,7 @@ const NavigationDrawer: React.FC<Props> = ({
                 </List>
                 <Divider />
                 <List>
-                    <Link href="/create-folder" passHref>
+                    <Link href="/create-folder" passHref noLinkStyle>
                         <AddButton variant="drawer" resource="folder" />
                     </Link>
                     {showFolderOptions && (
