@@ -39,7 +39,10 @@ const Breadcrumbs: React.FC = () => {
                 >
                     <Link href={`/folders/${folderId}/notes`}>
                         <Skeleton width="100px">
-                            {selectedFolder?.name}
+                            {
+                                /* istanbul ignore next */
+                                selectedFolder?.name
+                            }
                         </Skeleton>
                     </Link>
 
