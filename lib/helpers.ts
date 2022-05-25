@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 
 export const formatDate = (
+    /* istanbul ignore next */
     date: Date | string | number | undefined,
     isDetail = false
 ): string => {
@@ -41,12 +42,14 @@ export const findNote = (notes, noteId) => {
     });
 };
 
-export const decodeHtml = (html) => {
+export const decodeHtml = (html: string) => {
+    /* istanbul ignore next */
     if (typeof window === 'undefined') {
         return '';
     }
     const div = document.createElement('div');
     div.innerHTML = html;
+    /* istanbul ignore next */
     return div.textContent || div.innerText || '';
 };
 
