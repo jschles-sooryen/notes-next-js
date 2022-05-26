@@ -23,6 +23,7 @@ const customJestConfig = {
     coveragePathIgnorePatterns: [
         '<rootDir>/node_modules/',
         '<rootDir>/ckeditor5/',
+        '<rootDir>/lib/graphql/mocks/',
     ],
 };
 
