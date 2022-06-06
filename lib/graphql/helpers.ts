@@ -3,6 +3,13 @@ export const getUser = async (db, email) => {
     return user;
 };
 
+export const getFolders = async (db, id) => {
+    const folders = await db.Folder.find({
+        user: id,
+    });
+    return folders;
+};
+
 export const handleGraphQLError = (e) => ({
     code: e.extensions.response.status,
     success: false,
