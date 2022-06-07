@@ -16,14 +16,14 @@ export const formatDate = (
     let formattedDate;
 
     if (
-        dateObj.getMonth() == new Date().getMonth() &&
+        dateObj.getMonth() === new Date().getMonth() &&
         dateObj.getDate() === new Date().getDate()
     ) {
         dateFormat = 'h:mm a';
     }
 
     if (
-        dateObj.getMonth() == new Date().getMonth() &&
+        dateObj.getMonth() === new Date().getMonth() &&
         dateObj.getDate() === new Date().getDate() - 1
     ) {
         formattedDate = 'Yesterday';
