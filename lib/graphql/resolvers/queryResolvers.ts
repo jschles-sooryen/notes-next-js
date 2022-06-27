@@ -3,7 +3,7 @@ import {
     getFolders,
     handleGraphQLError,
     handleAuthError,
-} from '../helpers';
+} from '../../server/dbOperations';
 
 const queryResolvers = {
     getFolders: async (_, args, { session, db }) => {
