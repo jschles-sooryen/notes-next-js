@@ -28,6 +28,7 @@ const MobileNavigation: React.FC = () => {
         !router.query.noteId &&
         router.pathname !== '/create-note';
 
+    /* istanbul ignore next */
     const onDeleteFolderConfirm = async () => {
         const id = router.query.folderId as string;
         const mutation = DELETE_FOLDER_MUTATION(id, email);
@@ -53,6 +54,7 @@ const MobileNavigation: React.FC = () => {
         }
     };
 
+    /* istanbul ignore next */
     return (
         <>
             <AppBar
@@ -64,6 +66,7 @@ const MobileNavigation: React.FC = () => {
                     boxShadow: 'none',
                     position: 'relative',
                 }}
+                data-testid="mobile-nav-container"
             >
                 <Toolbar sx={{ borderBottom: '2px solid #eee' }}>
                     {showBreadcrumbs ? (
@@ -84,6 +87,7 @@ const MobileNavigation: React.FC = () => {
                     </Box>
                 </Toolbar>
             </AppBar>
+
             <NavigationDrawer
                 open={open}
                 onClose={() => setOpen(false)}

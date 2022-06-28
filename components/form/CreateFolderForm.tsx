@@ -13,6 +13,7 @@ interface Props {
 const CreateFolderForm: React.FC<Props> = ({ onSubmit }) => {
     const { register, handleSubmit, formState } = useForm();
     const { isMobile } = useMediaQuery();
+    /* istanbul ignore next */
     const hasNameError = !!formState?.errors?.name;
 
     return (
@@ -21,7 +22,9 @@ const CreateFolderForm: React.FC<Props> = ({ onSubmit }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: isMobile ? 'auto' : 'calc(100% - 300px)',
+                width:
+                    /* istanbul ignore next */
+                    isMobile ? 'auto' : 'calc(100% - 300px)',
             }}
         >
             <Card
@@ -52,6 +55,9 @@ const CreateFolderForm: React.FC<Props> = ({ onSubmit }) => {
                     name="name"
                     placeholder="Folder Name"
                     error={hasNameError}
+                    inputProps={{
+                        'data-testid': 'f-form',
+                    }}
                 />
                 {hasNameError && (
                     <Box sx={{ marginY: 1, fontSize: 12, color: 'red' }}>

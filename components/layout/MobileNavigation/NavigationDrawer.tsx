@@ -45,6 +45,7 @@ const NavigationDrawer: React.FC<Props> = ({
     const handleUpdateFolderClick = () => {
         onClose();
         setTimeout(() => {
+            /* istanbul ignore next */
             setUpdatingFolder(folderId as string);
         }, 0);
     };
@@ -63,7 +64,7 @@ const NavigationDrawer: React.FC<Props> = ({
             <Box>
                 <List>
                     <Link href="/folders" passHref>
-                        <ListItem button component="a">
+                        <ListItem button>
                             <ListItemIcon>
                                 <FolderIcon color="primary" />
                             </ListItemIcon>
@@ -73,9 +74,7 @@ const NavigationDrawer: React.FC<Props> = ({
                 </List>
                 <Divider />
                 <List>
-                    <Link href="/create-folder" passHref>
-                        <AddButton variant="drawer" resource="folder" />
-                    </Link>
+                    <AddButton variant="drawer" resource="folder" />
                     {showFolderOptions && (
                         <>
                             <ListItem button onClick={handleUpdateFolderClick}>

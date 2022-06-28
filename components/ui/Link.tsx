@@ -87,6 +87,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
         typeof href === 'string' &&
         (href.indexOf('http') === 0 || href.indexOf('mailto:') === 0);
 
+    /* istanbul ignore next */
     if (isExternal) {
         if (noLinkStyle) {
             return (
@@ -104,6 +105,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
         );
     }
 
+    /* istanbul ignore next */
     if (noLinkStyle) {
         return (
             <NextLinkComposed

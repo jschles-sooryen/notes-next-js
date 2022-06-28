@@ -3,14 +3,19 @@ import { useRouter } from 'next/router';
 import { Box } from '@mui/system';
 import Link from '../ui/Link';
 import Skeleton from '../ui/Skeleton';
-import { findNote } from '../../lib/helpers';
+import { findNote } from '@lib/helpers';
 import { useFolders } from '@lib/graphql/hooks';
 
-const BreadcrumbArrow: React.FC = () => <Box sx={{ marginX: 1 }}>{'>'}</Box>;
+const BreadcrumbArrow: React.FC = () => (
+    <Box sx={{ marginX: 1 }} data-testid="arrow">
+        {'>'}
+    </Box>
+);
 
 const Breadcrumbs: React.FC = () => {
     const router = useRouter();
     const { selectedFolder } = useFolders();
+    /* istanbul ignore next */
     const notes = selectedFolder?.notes || [];
     const { folderId, noteId } = router.query;
     const selectedNote = React.useMemo(
@@ -34,20 +39,28 @@ const Breadcrumbs: React.FC = () => {
                 >
                     <Link href={`/folders/${folderId}/notes`}>
                         <Skeleton width="100px">
-                            {selectedFolder?.name}
+                            {
+                                /* istanbul ignore next */
+                                selectedFolder?.name
+                            }
                         </Skeleton>
                     </Link>
 
-                    {!!selectedNote ? (
-                        <>
-                            <BreadcrumbArrow />
-                            <Link href={`/folders/${folderId}/notes/${noteId}`}>
-                                <Skeleton width="100px">
-                                    {selectedNote.name}
-                                </Skeleton>
-                            </Link>
-                        </>
-                    ) : null}
+                    {
+                        /* istanbul ignore next */
+                        !!selectedNote ? (
+                            <>
+                                <BreadcrumbArrow />
+                                <Link
+                                    href={`/folders/${folderId}/notes/${noteId}`}
+                                >
+                                    <Skeleton width="100px">
+                                        {selectedNote.name}
+                                    </Skeleton>
+                                </Link>
+                            </>
+                        ) : null
+                    }
                 </Box>
             </Box>
         );

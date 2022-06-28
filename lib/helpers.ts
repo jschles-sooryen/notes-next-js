@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 
 export const formatDate = (
+    /* istanbul ignore next */
     date: Date | string | number | undefined,
     isDetail = false
 ): string => {
@@ -14,11 +15,17 @@ export const formatDate = (
     let dateFormat = 'MM/dd/yyyy';
     let formattedDate;
 
-    if (dateObj.getDate() === new Date().getDate()) {
+    if (
+        dateObj.getMonth() === new Date().getMonth() &&
+        dateObj.getDate() === new Date().getDate()
+    ) {
         dateFormat = 'h:mm a';
     }
 
-    if (dateObj.getDate() === new Date().getDate() - 1) {
+    if (
+        dateObj.getMonth() === new Date().getMonth() &&
+        dateObj.getDate() === new Date().getDate() - 1
+    ) {
         formattedDate = 'Yesterday';
     } else {
         formattedDate = format(dateObj, dateFormat);
@@ -41,12 +48,14 @@ export const findNote = (notes, noteId) => {
     });
 };
 
-export const decodeHtml = (html) => {
+export const decodeHtml = (html: string) => {
+    /* istanbul ignore next */
     if (typeof window === 'undefined') {
         return '';
     }
     const div = document.createElement('div');
     div.innerHTML = html;
+    /* istanbul ignore next */
     return div.textContent || div.innerText || '';
 };
 

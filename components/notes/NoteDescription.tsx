@@ -14,16 +14,19 @@ const NoteDescription: React.FC<Props> = ({ value = '' }) => {
     const rootRef = React.useRef() as any;
     const { isDesktop } = useMediaQuery();
 
+    /* istanbul ignore next */
     React.useEffect(() => {
         const offset = !isDesktop ? 88 : 32;
         function changeEditorHeight(): void {
             setTimeout((): void => {
-                setEditorHeight(
-                    `${
-                        rootRef?.current?.getBoundingClientRect().height -
-                        offset
-                    }px`
-                );
+                if (rootRef && rootRef.current) {
+                    setEditorHeight(
+                        `${
+                            rootRef?.current?.getBoundingClientRect().height -
+                            offset
+                        }px`
+                    );
+                }
             }, 0);
         }
 
@@ -32,7 +35,7 @@ const NoteDescription: React.FC<Props> = ({ value = '' }) => {
         window.addEventListener('resize', changeEditorHeight);
 
         return () => window.removeEventListener('resize', changeEditorHeight);
-    }, [isDesktop]);
+    }, [isDesktop, rootRef]);
 
     return (
         <Box
