@@ -93,7 +93,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
             return (
                 <Anchor
                     className={className}
-                    href={href}
+                    href={href as any}
                     ref={ref}
                     {...other}
                 />
@@ -101,7 +101,12 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
         }
 
         return (
-            <MuiLink className={className} href={href} ref={ref} {...other} />
+            <MuiLink
+                className={className}
+                href={href as any}
+                ref={ref}
+                {...other}
+            />
         );
     }
 
